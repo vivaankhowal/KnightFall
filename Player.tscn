@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://djrqkqt1xt36m"]
+[gd_scene load_steps=30 format=3 uid="uid://djrqkqt1xt36m"]
 
 [ext_resource type="Script" uid="uid://rwrgwbni2ow0" path="res://player.gd" id="1_xhfnw"]
 [ext_resource type="Texture2D" uid="uid://c8hth2xbh2e52" path="res://KnightFall Assets/Player Anims/dash.png" id="2_cxr5p"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://caxpi3osbf2ba" path="res://KnightFall Assets/Player Anims/idle.png" id="3_tdg3f"]
 [ext_resource type="Texture2D" uid="uid://b3442oh6xj87h" path="res://KnightFall Assets/Player Anims/jump.png" id="4_dtqjt"]
 [ext_resource type="Texture2D" uid="uid://t5to67t8x6c5" path="res://KnightFall Assets/Player Anims/run.png" id="5_5ncpa"]
+[ext_resource type="PackedScene" uid="uid://qh5y360l66ns" path="res://Sword.tscn" id="7_dtqjt"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wi0c6"]
 atlas = ExtResource("2_cxr5p")
@@ -194,6 +195,11 @@ shape = SubResource("RectangleShape2D_kpjcp")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(4, 4)
+
+[node name="Weapon" type="Node2D" parent="."]
+
+[node name="Sword" parent="Weapon" instance=ExtResource("7_dtqjt")]
+position = Vector2(13, 8)
 
 [connection signal="timeout" from="DashTimer" to="." method="_on_dash_timer_timeout"]
 [connection signal="timeout" from="DashTimer" to="." method="_on_timer_timeout"]
