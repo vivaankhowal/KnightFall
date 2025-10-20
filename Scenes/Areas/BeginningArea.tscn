@@ -1,10 +1,10 @@
 [gd_scene load_steps=5 format=3 uid="uid://cvmaqq4astvit"]
 
-[ext_resource type="Texture2D" uid="uid://0q42nkd0v1c2" path="res://KnightFall Assets/Original Set/atlas_floor-16x16.png" id="1_y1jsw"]
-[ext_resource type="PackedScene" uid="uid://djrqkqt1xt36m" path="res://Player.tscn" id="2_1kog2"]
+[ext_resource type="Texture2D" uid="uid://0q42nkd0v1c2" path="res://KnightFall Assets/Original Set/atlas_floor-16x16.png" id="1_x3qh4"]
+[ext_resource type="PackedScene" uid="uid://djrqkqt1xt36m" path="res://Scenes/Characters/Player.tscn" id="2_npq0p"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1kog2"]
-texture = ExtResource("1_y1jsw")
+texture = ExtResource("1_x3qh4")
 0:0/0 = 0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 1:0/0 = 0
@@ -63,5 +63,5 @@ tile_set = SubResource("TileSet_2xot7")
 format = 2
 layer_0/tile_data = PackedInt32Array(1572872, 0, 0, 1572873, 0, 0, 1572874, 0, 0, 1572875, 0, 0, 1572876, 0, 0, 1572877, 0, 0, 1572878, 0, 0, 1572879, 0, 0, 1572880, 0, 0, 1572881, 0, 0, 1572882, 0, 0, 1572883, 0, 0, 1572884, 0, 0, 1572885, 0, 0, 1572886, 0, 0, 1572887, 0, 0, 1572888, 0, 0, 1572889, 0, 0, 1572890, 0, 0, 1572891, 0, 0, 1572892, 0, 0, 1572893, 0, 0, 1572894, 0, 0, 1572895, 0, 0, 1572896, 0, 0, 1572897, 0, 0, 1572898, 0, 0, 1572899, 0, 0, 1572900, 0, 0, 1572901, 0, 0, 1572902, 0, 0, 1572903, 0, 0, 1572904, 0, 0, 1572905, 0, 0, 1572906, 0, 0, 1572907, 0, 0, 1572908, 0, 0, 1572909, 0, 0, 1572910, 0, 0, 1572911, 0, 0, 1572912, 0, 0, 1572913, 0, 0, 1572914, 0, 0, 1572915, 0, 0, 1572916, 0, 0, 1572917, 0, 0, 1572918, 0, 0, 1572919, 0, 0, 1572920, 0, 0, 1572921, 0, 0, 1572922, 0, 0, 1572923, 0, 0, 1572924, 0, 0, 1572925, 0, 0, 1572926, 0, 0, 1572927, 0, 0, 1572928, 0, 0, 1572929, 0, 0, 1572930, 0, 0, 1572931, 0, 0, 1572932, 0, 0)
 
-[node name="CharacterBody2D" parent="." instance=ExtResource("2_1kog2")]
+[node name="CharacterBody2D" parent="." instance=ExtResource("2_npq0p")]
 position = Vector2(231, 362)
