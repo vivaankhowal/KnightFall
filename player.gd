@@ -3,13 +3,14 @@ extends CharacterBody2D
 @export var move_speed: float = 200.0
 @export var dash_speed: float = 500.0
 @export var dash_duration: float = 0.2
-@export var weapon_distance: float = 10.0     # how far the sword drags behind player
+@export var weapon_distance: float = 13.0     # how far the sword drags behind player
 @export var drag_height: float = 10.0         # how low the sword drags (vertical offset)
 
 var is_dashing: bool = false
 var dash_dir: Vector2 = Vector2.ZERO
 var last_move_dir: Vector2 = Vector2.DOWN
 var facing_right: bool = true
+var is_swinging: bool = false
 
 @onready var anim_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var weapon: Node2D = $Weapon/Sword
@@ -41,16 +42,20 @@ func _physics_process(delta):
 		play_dash_animation(dash_dir)
 
 	move_and_slide()
+	$Weapon.facing_right = facing_right
 
 	update_facing_direction(input_vector)
 	update_weapon_position()
+	
+	if Input.is_action_just_pressed("attack") and not is_swinging:
+		swing_sword()
+
 
 
 # ----------------------------------------------------
 # --- Facing Direction + Sword Drag ---
 # ----------------------------------------------------
 func update_facing_direction(input_vector: Vector2):
-	# Update direction based on horizontal input
 	if input_vector.x > 0:
 		facing_right = true
 	elif input_vector.x < 0:
@@ -58,21 +63,18 @@ func update_facing_direction(input_vector: Vector2):
 
 	anim_sprite.flip_h = not facing_right
 
+	# Flip sword horizontally
+	$Weapon/Sword.scale.x = 1 if facing_right else -1
+
+
 
 func update_weapon_position():
-	var offset_x = -weapon_distance if facing_right else weapon_distance
-	var offset_y = drag_height
-	var offset = Vector2(offset_x, offset_y)
+	# Sword follows the player's exact position (no offset)
+	weapon.global_position = global_position
 
-	weapon.global_position = global_position + offset
-
-	# Keep same rotation
-	weapon.rotation_degrees = 250
-
-	# Flip vertically depending on facing direction
-	weapon.scale = Vector2(1, -1) if facing_right else Vector2(1, 1)
-
-
+	# Keep rotation and flip logic as-is
+	weapon.rotation_degrees = 250 if facing_right else -250
+	weapon.scale.x = -1 if facing_right else 1
 
 
 # ----------------------------------------------------
@@ -99,7 +101,7 @@ func play_dash_animation(dir: Vector2):
 	elif dir.y < 0:
 		anim_sprite.play("dash_up")
 	else:
-		anim_sprite.play("dash_down")
+		anim_sprite.play("dash_up")
 
 
 # ----------------------------------------------------
@@ -114,3 +116,25 @@ func start_dash(direction: Vector2):
 
 func _on_dash_timer_timeout():
 	is_dashing = false
+
+func swing_sword():
+	if is_swinging:
+		return
+	is_swinging = true
+
+	var base_rot = 250 if facing_right else -250
+	var swing_range = 140  # swing width
+
+	var swing_start = base_rot + (swing_range / 2) * (1 if facing_right else -1)
+	var swing_end = base_rot - (swing_range / 2) * (1 if facing_right else -1)
+
+	var tween = create_tween()
+	tween.set_parallel(false)
+
+	# Rotate the visible sword, not the Weapon node
+	tween.tween_property($Weapon/Sword, "rotation_degrees", swing_end, 0.12).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property($Weapon/Sword, "rotation_degrees", base_rot, 0.18).set_delay(0.12).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+
+	tween.tween_callback(func():
+		is_swinging = false
+	)
