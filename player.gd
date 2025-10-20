@@ -91,12 +91,12 @@ func start_dash() -> void:
 
 func play_dash_animation(dir: Vector2) -> void:
 	if abs(dir.x) > abs(dir.y):
-		anim.play("dash_side")
+		anim.play("dash")
 		anim.flip_h = dir.x < 0
 	elif dir.y < 0:
-		anim.play("dash_up")
+		anim.play("dash")
 	else:
-		anim.play("dash_down")
+		anim.play("dash")
 
 
 func _on_dash_timer_timeout() -> void:
