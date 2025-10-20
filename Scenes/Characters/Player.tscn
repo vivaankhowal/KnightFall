@@ -158,7 +158,7 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kpjcp"]
 size = Vector2(12, 18)
 
-[node name="CharacterBody2D" type="CharacterBody2D"]
+[node name="CharacterBody2D" type="CharacterBody2D" groups=["player"]]
 script = ExtResource("1_xhfnw")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -166,7 +166,7 @@ texture_filter = 1
 position = Vector2(0, -6)
 sprite_frames = SubResource("SpriteFrames_xhfnw")
 animation = &"dash"
-frame_progress = 0.60195374
+frame_progress = 0.4054819
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -3)
