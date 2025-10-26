@@ -6,9 +6,9 @@
 [ext_resource type="Texture2D" uid="uid://3uw1dic3fajq" path="res://KnightFall Assets/Original Set/atlas_walls_low-16x16.png" id="3_0adf1"]
 [ext_resource type="Texture2D" uid="uid://12p3orfm2oje" path="res://KnightFall Assets/Smooth Dungeon Tileset.png" id="4_q0h7r"]
 [ext_resource type="Texture2D" uid="uid://cdu3w04uat7f2" path="res://images/Carpets.png" id="5_0adf1"]
-[ext_resource type="Texture2D" uid="uid://5jorr3o2ir6j" path="res://Other_objects.png" id="5_1y7hs"]
-[ext_resource type="Texture2D" uid="uid://gkyxsqanw5lw" path="res://pedestals.png" id="6_0adf1"]
-[ext_resource type="Texture2D" uid="uid://ycor7fo7qprw" path="res://supplies_objects.png" id="7_8g0e2"]
+[ext_resource type="Texture2D" uid="uid://5jorr3o2ir6j" path="res://KnightFall Assets/Other_objects.png" id="5_1y7hs"]
+[ext_resource type="Texture2D" uid="uid://gkyxsqanw5lw" path="res://KnightFall Assets/pedestals.png" id="6_0adf1"]
+[ext_resource type="Texture2D" uid="uid://ycor7fo7qprw" path="res://KnightFall Assets/supplies_objects.png" id="7_8g0e2"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_npq0p"]
 texture = ExtResource("1_x3qh4")
@@ -23,13 +23,9 @@ texture = ExtResource("1_x3qh4")
 1:1/0 = 0
 2:1/0 = 0
 3:1/0 = 0
-3:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -2.032673, -8, -2.015874)
 4:1/0 = 0
-4:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -2.032673, -8, -2.015874)
 5:1/0 = 0
-5:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -2.032673, -8, -2.015874)
 6:1/0 = 0
-6:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -2.032673, -8, -2.015874)
 0:2/0 = 0
 1:2/0 = 0
 2:2/0 = 0
@@ -2377,6 +2373,3 @@ layer_0/tile_data = PackedInt32Array(-65530, 524288, 1, 6, 524288, 2, 65542, 524
 
 [node name="CharacterBody2D" parent="." instance=ExtResource("2_npq0p")]
 position = Vector2(242, 218)
-
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(239, 100)

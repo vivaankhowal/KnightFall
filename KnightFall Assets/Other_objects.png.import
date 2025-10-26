@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ycor7fo7qprw"
-path="res://.godot/imported/supplies_objects.png-9b188ada8e4eaa82cb70174a3c626e94.ctex"
+uid="uid://5jorr3o2ir6j"
+path="res://.godot/imported/Other_objects.png-3c86d3808d3746c5d1d4044f238b4f53.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://supplies_objects.png"
-dest_files=["res://.godot/imported/supplies_objects.png-9b188ada8e4eaa82cb70174a3c626e94.ctex"]
+source_file="res://KnightFall Assets/Other_objects.png"
+dest_files=["res://.godot/imported/Other_objects.png-3c86d3808d3746c5d1d4044f238b4f53.ctex"]
 
 [params]
 

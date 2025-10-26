@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://gkyxsqanw5lw"
-path="res://.godot/imported/pedestals.png-a8e2daad17bba98efb90df8d9763d077.ctex"
+uid="uid://ycor7fo7qprw"
+path="res://.godot/imported/supplies_objects.png-be9c51a98a429f4b03f2a5e57a750b06.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://pedestals.png"
-dest_files=["res://.godot/imported/pedestals.png-a8e2daad17bba98efb90df8d9763d077.ctex"]
+source_file="res://KnightFall Assets/supplies_objects.png"
+dest_files=["res://.godot/imported/supplies_objects.png-be9c51a98a429f4b03f2a5e57a750b06.ctex"]
 
 [params]
 
