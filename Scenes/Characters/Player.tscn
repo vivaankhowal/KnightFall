@@ -1,10 +1,21 @@
-[gd_scene load_steps=26 format=3 uid="uid://djrqkqt1xt36m"]
+[gd_scene load_steps=33 format=3 uid="uid://djrqkqt1xt36m"]
 
-[ext_resource type="Script" uid="uid://rwrgwbni2ow0" path="res://player.gd" id="1_xhfnw"]
-[ext_resource type="Texture2D" uid="uid://25qnfm17ever" path="res://KnightFall Assets/Player Anims/dash.png" id="2_cxr5p"]
-[ext_resource type="Texture2D" uid="uid://caxpi3osbf2ba" path="res://KnightFall Assets/Player Anims/idle.png" id="3_tdg3f"]
-[ext_resource type="Texture2D" uid="uid://b3442oh6xj87h" path="res://KnightFall Assets/Player Anims/jump.png" id="4_dtqjt"]
-[ext_resource type="Texture2D" uid="uid://t5to67t8x6c5" path="res://KnightFall Assets/Player Anims/run.png" id="5_5ncpa"]
+[ext_resource type="Script" uid="uid://rwrgwbni2ow0" path="res://Scenes/Characters/player.gd" id="1_xhfnw"]
+[ext_resource type="Texture2D" uid="uid://25qnfm17ever" path="res://KnightFall Assets/dash.png" id="2_cxr5p"]
+[ext_resource type="Texture2D" uid="uid://bp2xx7ftpbnap" path="res://knight idle/sprite-1-1.png" id="3_vtvfp"]
+[ext_resource type="Texture2D" uid="uid://b3442oh6xj87h" path="res://KnightFall Assets/jump.png" id="4_dtqjt"]
+[ext_resource type="Texture2D" uid="uid://35jreeveuq0d" path="res://knight idle/sprite-1-4.png" id="4_ypuv8"]
+[ext_resource type="Texture2D" uid="uid://t5to67t8x6c5" path="res://KnightFall Assets/run.png" id="5_5ncpa"]
+[ext_resource type="Texture2D" uid="uid://bkeo66jk5tn6v" path="res://knight idle/sprite-1-7.png" id="5_toq76"]
+[ext_resource type="Texture2D" uid="uid://b12g4kqk33710" path="res://knight idle/sprite-1-10.png" id="6_hl70s"]
+[ext_resource type="Texture2D" uid="uid://dq4cjgunjyda0" path="res://knight idle/sprite-4-1.png" id="7_ltdul"]
+[ext_resource type="Texture2D" uid="uid://ba0qjiat32kqv" path="res://knight idle/sprite-4-4.png" id="8_ibpri"]
+[ext_resource type="Texture2D" uid="uid://dxlhs4egh61gi" path="res://knight idle/sprite-4-7.png" id="9_qd2bg"]
+[ext_resource type="Texture2D" uid="uid://bivend8h4f1yt" path="res://knight idle/sprite-4-10.png" id="10_qeewm"]
+[ext_resource type="Texture2D" uid="uid://ct7yremqlcucu" path="res://knight idle/sprite-7-1.png" id="11_81gbe"]
+[ext_resource type="Texture2D" uid="uid://bheqc8lloet5j" path="res://knight idle/sprite-7-4.png" id="12_3vnku"]
+[ext_resource type="Texture2D" uid="uid://c1mm0xtvkbbmd" path="res://knight idle/sprite-7-7.png" id="13_hqlak"]
+[ext_resource type="Texture2D" uid="uid://cg8tetw5v8ub1" path="res://knight idle/sprite-7-10.png" id="14_mc0oj"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7qdam"]
 atlas = ExtResource("2_cxr5p")
@@ -20,22 +31,6 @@ region = Rect2(32, 0, 16, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_w38he"]
 atlas = ExtResource("2_cxr5p")
-region = Rect2(48, 0, 16, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_l6ohk"]
-atlas = ExtResource("3_tdg3f")
-region = Rect2(0, 0, 16, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_oudfo"]
-atlas = ExtResource("3_tdg3f")
-region = Rect2(16, 0, 16, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_d6rpx"]
-atlas = ExtResource("3_tdg3f")
-region = Rect2(32, 0, 16, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_r3kul"]
-atlas = ExtResource("3_tdg3f")
 region = Rect2(48, 0, 16, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jatw7"]
@@ -99,16 +94,40 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_l6ohk")
+"texture": ExtResource("3_vtvfp")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_oudfo")
+"texture": ExtResource("4_ypuv8")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_d6rpx")
+"texture": ExtResource("5_toq76")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_r3kul")
+"texture": ExtResource("6_hl70s")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_ltdul")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_ibpri")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_qd2bg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_qeewm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_81gbe")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_3vnku")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_hqlak")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_mc0oj")
 }],
 "loop": true,
 "name": &"idle",
@@ -164,9 +183,10 @@ script = ExtResource("1_xhfnw")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
 position = Vector2(0, -6)
+scale = Vector2(0.25, 0.25)
 sprite_frames = SubResource("SpriteFrames_xhfnw")
-animation = &"dash"
-frame_progress = 0.4054819
+animation = &"idle"
+frame_progress = 0.15433611
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -3)
