@@ -180,8 +180,8 @@ animations = [{
 "texture": ExtResource("9_gpqdx")
 }],
 "loop": false,
-"name": &"charged slash",
-"speed": 8.0
+"name": &"charged_slash",
+"speed": 10.0
 }, {
 "frames": [],
 "loop": true,
@@ -523,7 +523,7 @@ animations = [{
 "texture": ExtResource("101_l3m0x")
 }],
 "loop": false,
-"name": &"vertical slash",
+"name": &"vertical_slash",
 "speed": 10.0
 }]
 
