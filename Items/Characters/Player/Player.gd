@@ -169,7 +169,7 @@ func spawn_slash_projectile(direction: Vector2) -> void:
 	get_parent().add_child(slash)
 
 	# Fixed offset – always the same distance from player
-	var spawn_distance := 24.0
+	var spawn_distance := 40.0
 	slash.global_position = global_position + direction * spawn_distance
 	slash.rotation = direction.angle()
 	slash.direction = direction

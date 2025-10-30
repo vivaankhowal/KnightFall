@@ -437,10 +437,11 @@ animations = [{
 "speed": 13.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_kpjcp"]
-size = Vector2(15.833333, 25.833332)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rwn2q"]
+radius = 6.25
+height = 21.666666
 
-[node name="CharacterBody2D" type="CharacterBody2D" groups=["player"]]
+[node name="Player" type="CharacterBody2D" groups=["player"]]
 scale = Vector2(1.2, 1.2)
 script = ExtResource("1_es1fo")
 slash_scene = ExtResource("3_c14pu")
@@ -454,9 +455,8 @@ sprite_frames = SubResource("SpriteFrames_xhfnw")
 animation = &"vertical_slash"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
-position = Vector2(1.2499998, -6.6666665)
-shape = SubResource("RectangleShape2D_kpjcp")
+position = Vector2(2.5, -4.1666665)
+shape = SubResource("CapsuleShape2D_rwn2q")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(3, 3)
