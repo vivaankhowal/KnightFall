@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://dm5mt27mr32lr"]
 
-[ext_resource type="Script" uid="uid://dexkl0vwgjr8s" path="res://Slash.gd" id="1_jlsnl"]
-[ext_resource type="Texture2D" uid="uid://dy1xansjxvhrs" path="res://testslash.png" id="2_02q3a"]
+[ext_resource type="Script" uid="uid://dexkl0vwgjr8s" path="res://Items/Characters/Player/slash/Slash.gd" id="1_jlsnl"]
+[ext_resource type="Texture2D" uid="uid://dy1xansjxvhrs" path="res://Items/Characters/Player/slash/SlashEffect.png" id="2_02q3a"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uqwxd"]
 size = Vector2(404, 101)

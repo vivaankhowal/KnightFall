@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://hhfgtlfeefv2"]
 
-[ext_resource type="Texture2D" uid="uid://0ikdr5ej3opt" path="res://dust.png" id="1_o2t3r"]
-[ext_resource type="Script" uid="uid://dl62hg4h1pg7u" path="res://dust_trail.gd" id="2_i84yr"]
+[ext_resource type="Texture2D" uid="uid://0ikdr5ej3opt" path="res://Items/Characters/Player/dust/dust.png" id="1_o2t3r"]
+[ext_resource type="Script" uid="uid://dl62hg4h1pg7u" path="res://Items/Characters/Player/dust/dust_trail.gd" id="2_i84yr"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fky5l"]
 atlas = ExtResource("1_o2t3r")

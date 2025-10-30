@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://cfg1irk0mn7ga" path="res://Items/Characters/Player/Player.gd" id="1_es1fo"]
 [ext_resource type="Texture2D" uid="uid://bhxwthhmfuqxw" path="res://Items/Characters/Player/death/sprite-3-2.png" id="2_8q3pd"]
 [ext_resource type="Texture2D" uid="uid://0pshsocsc18s" path="res://Items/Characters/Player/block/sprite-2-3.png" id="2_kqshr"]
-[ext_resource type="PackedScene" uid="uid://dm5mt27mr32lr" path="res://SlashProjectile.tscn" id="3_c14pu"]
-[ext_resource type="PackedScene" uid="uid://hhfgtlfeefv2" path="res://DustTrail.tscn" id="3_jgglj"]
+[ext_resource type="PackedScene" uid="uid://dm5mt27mr32lr" path="res://Items/Characters/Player/slash/SlashProjectile.tscn" id="3_c14pu"]
+[ext_resource type="PackedScene" uid="uid://hhfgtlfeefv2" path="res://Items/Characters/Player/dust/DustTrail.tscn" id="3_jgglj"]
 [ext_resource type="Texture2D" uid="uid://bdxqeng54oxcn" path="res://Items/Characters/Player/charged slash/sprite-11-12.png" id="3_ksm75"]
 [ext_resource type="Texture2D" uid="uid://d3h4qudbackmq" path="res://Items/Characters/Player/block/sprite-2-7.png" id="3_mx47d"]
 [ext_resource type="Texture2D" uid="uid://dkjef11b8i80r" path="res://Items/Characters/Player/death/sprite-3-4.png" id="3_o5wjy"]
@@ -459,7 +459,7 @@ position = Vector2(1.2499998, -6.6666665)
 shape = SubResource("RectangleShape2D_kpjcp")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(4, 4)
+zoom = Vector2(3, 3)
 
 [node name="SlashSpawn" type="Marker2D" parent="."]
 position = Vector2(3.333332, -1.6666666)

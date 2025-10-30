@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://0ikdr5ej3opt"
-path="res://.godot/imported/dust.png-e9e9118e22167c3e51b752d1c5b2ea65.ctex"
+uid="uid://dy1xansjxvhrs"
+path="res://.godot/imported/SlashEffect.png-dbc919d9fe0aca8c0c0132a200616fc6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://dust.png"
-dest_files=["res://.godot/imported/dust.png-e9e9118e22167c3e51b752d1c5b2ea65.ctex"]
+source_file="res://Items/Characters/Player/slash/SlashEffect.png"
+dest_files=["res://.godot/imported/SlashEffect.png-dbc919d9fe0aca8c0c0132a200616fc6.ctex"]
 
 [params]
 
