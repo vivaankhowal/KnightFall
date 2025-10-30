@@ -4,9 +4,12 @@ extends CharacterBody2D
 # CONFIG
 # -------------------------------
 @export var move_speed: float = 200.0
-@export var attack_cooldown: float = 0.5
+@export var attack_cooldown: float = 0.4
 @export var slash_scene: PackedScene
-
+@export var dust_scene: PackedScene
+@export var weapon_damage_upgrade: float = 1.0
+@export var attack_stop_time: float = 0.15
+@export var guard_speed_mult: float = 0.6   # slower while guarding
 
 # -------------------------------
 # STATE
@@ -14,10 +17,11 @@ extends CharacterBody2D
 var input_dir: Vector2 = Vector2.ZERO
 var facing_right: bool = true
 var is_attacking: bool = false
-var is_charging: bool = false
 var is_blocking: bool = false
 var attack_locked: bool = false
+var attack_hit_triggered: bool = false
 var current_attack: String = ""
+var attack_freeze_timer: float = 0.0
 
 # -------------------------------
 # NODES
@@ -25,48 +29,49 @@ var current_attack: String = ""
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 @onready var attack_timer: Timer = Timer.new()
 
+# -------------------------------
+# READY
+# -------------------------------
 func _ready() -> void:
+	anim.connect("frame_changed", Callable(self, "_on_frame_changed"))
 	add_child(attack_timer)
 	attack_timer.one_shot = true
 	attack_timer.connect("timeout", Callable(self, "_on_attack_timer_timeout"))
-
 
 # -------------------------------
 # MAIN LOOP
 # -------------------------------
 func _physics_process(delta: float) -> void:
+	# Short movement freeze during attack
+	if attack_freeze_timer > 0.0:
+		attack_freeze_timer -= delta
+		move_and_slide()
+		return
+
 	handle_movement_input(delta)
 	move_and_slide()
-
 
 # -------------------------------
 # MOVEMENT INPUT
 # -------------------------------
 func handle_movement_input(delta: float) -> void:
+	# Handle blocking
 	if Input.is_action_pressed("block"):
 		start_block()
 	else:
 		stop_block()
 
-	if not is_attacking and not is_blocking:
+	if not is_attacking:
 		input_dir = Vector2(
 			Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
-			Input.get_action_strength("move_down")  - Input.get_action_strength("move_up")
+			Input.get_action_strength("move_down") - Input.get_action_strength("move_up")
 		).normalized()
 
-		velocity = input_dir * move_speed
+		var speed = move_speed
+		if is_blocking:
+			speed *= guard_speed_mult
 
-		if input_dir != Vector2.ZERO:
-			update_facing(input_dir)
-
-	elif is_blocking:
-		input_dir = Vector2(
-			Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
-			Input.get_action_strength("move_down")  - Input.get_action_strength("move_up")
-		).normalized()
-
-		var guard_speed = move_speed * 0.6
-		velocity = input_dir * guard_speed
+		velocity = input_dir * speed
 
 		if input_dir != Vector2.ZERO:
 			update_facing(input_dir)
@@ -74,22 +79,20 @@ func handle_movement_input(delta: float) -> void:
 	handle_attack_input(delta)
 	update_animation()
 
-
 # -------------------------------
-# BLOCK / SHIELD
+# BLOCK / GUARD
 # -------------------------------
 func start_block() -> void:
 	if is_attacking:
+		# cancel attack if you block mid-swing
 		is_attacking = false
 		current_attack = ""
 		attack_timer.stop()
 	is_blocking = true
 
-
 func stop_block() -> void:
 	if is_blocking and not Input.is_action_pressed("block"):
 		is_blocking = false
-
 
 # -------------------------------
 # ATTACK LOGIC
@@ -99,22 +102,25 @@ func handle_attack_input(delta: float) -> void:
 		return
 
 	if Input.is_action_just_pressed("attack"):
-		start_directional_attack()
+		start_attack()
 
-
-func start_directional_attack() -> void:
+func start_attack() -> void:
 	is_attacking = true
 	attack_locked = true
+	attack_hit_triggered = false
 
 	var mouse_pos = get_global_mouse_position()
 	var dir_to_mouse = (mouse_pos - global_position).normalized()
 	var angle = rad_to_deg(dir_to_mouse.angle())
 
-	print("Cursor angle:", angle)
-
 	facing_right = dir_to_mouse.x >= 0
 	anim.flip_h = not facing_right
 
+	# Stop player briefly during swing
+	velocity = Vector2.ZERO
+	attack_freeze_timer = attack_stop_time
+
+	# Choose attack animation
 	if angle < -25 and angle > -155:
 		current_attack = "vertical_slash"
 	elif angle > 25 and angle < 155:
@@ -123,24 +129,60 @@ func start_directional_attack() -> void:
 		current_attack = "horizontal_slash"
 
 	anim.play(current_attack)
-	velocity = Vector2.ZERO
 	attack_timer.start(attack_cooldown)
 
-	# 🔥 Spawn the slash projectile
+# -------------------------------
+# FRAME EVENTS (ATTACK + DUST)
+# -------------------------------
+func _on_frame_changed() -> void:
+	# --- Attack frames ---
+	if anim.animation == "horizontal_slash" and anim.frame == 4:
+		trigger_attack_hit()
+	elif anim.animation == "vertical_slash" and anim.frame == 3:
+		trigger_attack_hit()
+	elif anim.animation == "charged_slash" and anim.frame == 4:
+		trigger_attack_hit()
+
+	# --- Frame-synced dust ---
+	if anim.animation == "run" and (anim.frame == 2 or anim.frame == 6):
+		spawn_dust()
+	elif anim.animation == "guard_run" and (anim.frame == 2 or anim.frame == 6):
+		spawn_dust()
+
+# -------------------------------
+# ATTACK PROJECTILE
+# -------------------------------
+func trigger_attack_hit() -> void:
+	if attack_hit_triggered:
+		return
+	attack_hit_triggered = true
+
+	var dir_to_mouse = (get_global_mouse_position() - global_position).normalized()
+	spawn_slash_projectile(dir_to_mouse)
+
+func spawn_slash_projectile(direction: Vector2) -> void:
+	if slash_scene == null:
+		push_warning("Slash scene not assigned!")
+		return
+
 	var slash = slash_scene.instantiate()
 	get_parent().add_child(slash)
-	var dir = dir_to_mouse
-	var perpendicular = Vector2(-dir.y, dir.x).normalized()
-	slash.global_position = global_position + dir * 5.0 + perpendicular * -6.0
-	slash.direction = dir
 
+	# Fixed offset – always the same distance from player
+	var spawn_distance := 24.0
+	slash.global_position = global_position + direction * spawn_distance
+	slash.rotation = direction.angle()
+	slash.direction = direction
+	slash.damage_multiplier = weapon_damage_upgrade
 
-
+# -------------------------------
+# ATTACK RESET
+# -------------------------------
 func _on_attack_timer_timeout() -> void:
 	is_attacking = false
 	attack_locked = false
 	current_attack = ""
-
+	attack_hit_triggered = false
 
 # -------------------------------
 # FACING + ANIMATION
@@ -149,7 +191,6 @@ func update_facing(dir: Vector2) -> void:
 	if dir.x != 0:
 		facing_right = dir.x > 0
 	anim.flip_h = not facing_right
-
 
 func update_animation() -> void:
 	if is_attacking:
@@ -163,3 +204,22 @@ func update_animation() -> void:
 		anim.play("idle")
 	else:
 		anim.play("run")
+
+# -------------------------------
+# FRAME-SYNCED DUST SYSTEM 💨
+# -------------------------------
+func spawn_dust() -> void:
+	if dust_scene == null:
+		return
+
+	var dust = dust_scene.instantiate()
+	get_parent().add_child(dust)
+
+	# Offset slightly behind player
+	var offset_distance = 10.0
+	var offset_dir = Vector2.LEFT if facing_right else Vector2.RIGHT
+	dust.global_position = global_position + offset_dir * offset_distance + Vector2(0, 8)
+
+	# Flip to match facing
+	dust.flip_h = not facing_right
+	dust.speed_scale = 0.6 if is_blocking else 1.0
