@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://dsii42bfyhc5p"]
+
+[node name="Weaponsmith" type="CharacterBody2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+
+[node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="."]
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+
+[node name="Label" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="Node2D" type="Node2D" parent="."]
+
+[node name="Panel" type="Panel" parent="Node2D"]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="Node2D/Panel"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
