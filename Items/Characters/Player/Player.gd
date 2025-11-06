@@ -10,6 +10,7 @@ extends CharacterBody2D
 @export var weapon_damage_upgrade: float = 1.0
 @export var attack_stop_time: float = 0.15
 @export var guard_speed_mult: float = 0.6   # slower while guarding
+@export var max_health: int = 100           # ❤️ player max health
 
 # -------------------------------
 # STATE
@@ -22,12 +23,14 @@ var attack_locked: bool = false
 var attack_hit_triggered: bool = false
 var current_attack: String = ""
 var attack_freeze_timer: float = 0.0
+var current_health: int = max_health
 
 # -------------------------------
 # NODES
 # -------------------------------
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 @onready var attack_timer: Timer = Timer.new()
+@onready var health_bar: ProgressBar = $HealthBar/ProgressBar
 
 # -------------------------------
 # READY
@@ -37,6 +40,8 @@ func _ready() -> void:
 	add_child(attack_timer)
 	attack_timer.one_shot = true
 	attack_timer.connect("timeout", Callable(self, "_on_attack_timer_timeout"))
+	current_health = max_health
+	update_health_bar()
 
 # -------------------------------
 # MAIN LOOP
@@ -46,10 +51,13 @@ func _physics_process(delta: float) -> void:
 	if attack_freeze_timer > 0.0:
 		attack_freeze_timer -= delta
 		move_and_slide()
-		return
+	else:
+		handle_movement_input(delta)
+		move_and_slide()
 
-	handle_movement_input(delta)
-	move_and_slide()
+	# keep health bar above player
+	if health_bar:
+		$HealthBar.position = Vector2(0, -40)
 
 # -------------------------------
 # MOVEMENT INPUT
@@ -223,3 +231,28 @@ func spawn_dust() -> void:
 	# Flip to match facing
 	dust.flip_h = not facing_right
 	dust.speed_scale = 0.6 if is_blocking else 1.0
+
+# -------------------------------
+# HEALTH SYSTEM ❤️
+# -------------------------------
+func take_damage(amount: int) -> void:
+	current_health -= amount
+	current_health = clamp(current_health, 0, max_health)
+	update_health_bar()
+	if current_health <= 0:
+		die()
+
+func heal(amount: int) -> void:
+	current_health = min(current_health + amount, max_health)
+	update_health_bar()
+
+func update_health_bar() -> void:
+	if health_bar:
+		health_bar.value = current_health
+
+func die() -> void:
+	print("💀 Player Died!")
+	if anim.has_animation("death"):
+		anim.play("death")
+	else:
+		queue_free()

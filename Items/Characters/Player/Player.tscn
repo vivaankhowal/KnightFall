@@ -463,3 +463,14 @@ zoom = Vector2(3, 3)
 
 [node name="SlashSpawn" type="Marker2D" parent="."]
 position = Vector2(3.333332, -1.6666666)
+
+[node name="HealthBar" type="Node2D" parent="."]
+
+[node name="ProgressBar" type="ProgressBar" parent="HealthBar"]
+offset_left = -16.666666
+offset_top = 9.166666
+offset_right = 23.333334
+offset_bottom = 15.833332
+theme_override_colors/font_color = Color(0, 0.9490196, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 1, 0, 1)
+show_percentage = false
