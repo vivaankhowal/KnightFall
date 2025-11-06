@@ -177,7 +177,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"death",
-"speed": 8.0
+"speed": 4.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -438,8 +438,8 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rwn2q"]
-radius = 6.25
-height = 21.666666
+radius = 6.666666
+height = 28.333332
 
 [node name="Player" type="CharacterBody2D" groups=["player"]]
 scale = Vector2(1.2, 1.2)
@@ -452,7 +452,9 @@ texture_filter = 1
 position = Vector2(0, -6)
 scale = Vector2(0.25, 0.25)
 sprite_frames = SubResource("SpriteFrames_xhfnw")
-animation = &"vertical_slash"
+animation = &"death"
+frame = 5
+frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(2.5, -4.1666665)

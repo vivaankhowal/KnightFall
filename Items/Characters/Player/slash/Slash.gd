@@ -5,9 +5,9 @@ extends Area2D
 # -------------------------------
 @export var speed: float = 400.0
 @export var lifetime: float = 0.3
-@export var base_damage: int = 1
+@export var base_damage: int = 10
 @export var hit_effect_scene: PackedScene
-@export var damage_multiplier: float = 1.0   # <-- upgraded by Weaponsmith
+@export var damage_multiplier: float = 1.0   # upgraded by Weaponsmith
 
 # -------------------------------
 # STATE
@@ -25,33 +25,41 @@ var timer: float = 0.0
 # -------------------------------
 func _ready() -> void:
 	sprite.modulate = Color(1, 1, 1, 1)
+	connect("body_entered", Callable(self, "_on_body_entered"))
+	connect("area_entered", Callable(self, "_on_area_entered"))
 
 # -------------------------------
 # PHYSICS
 # -------------------------------
 func _physics_process(delta: float) -> void:
-	# Move forward constantly
 	global_position += direction * speed * delta
 	timer += delta
-
-	# Remove after time expires
 	if timer >= lifetime:
 		queue_free()
 
 # -------------------------------
-# COLLISION
+# COLLISION (ENEMY HIT)
 # -------------------------------
-func _on_area_entered(area: Area2D) -> void:
-	if area.is_in_group("Enemies"):
-		# Spawn hit effect
-		if hit_effect_scene:
-			var fx = hit_effect_scene.instantiate()
-			get_parent().add_child(fx)
-			fx.global_position = global_position
+func _on_body_entered(body: Node) -> void:
+	_handle_hit(body)
 
-		# Apply damage (base × multiplier)
-		if area.has_method("take_damage"):
-			var final_damage = int(base_damage * damage_multiplier)
-			area.take_damage(final_damage)
+func _on_area_entered(area: Node) -> void:
+	_handle_hit(area)
 
-		queue_free()
+func _handle_hit(target: Node) -> void:
+	# Only damage enemies
+	if not target.is_in_group("enemy"):
+		return
+
+	# Spawn hit effect
+	if hit_effect_scene:
+		var fx = hit_effect_scene.instantiate()
+		get_parent().add_child(fx)
+		fx.global_position = global_position
+
+	# Apply damage (base × multiplier)
+	if target.has_method("take_damage"):
+		var final_damage = int(base_damage * damage_multiplier)
+		target.take_damage(final_damage)
+
+	queue_free()

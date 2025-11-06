@@ -252,7 +252,13 @@ func update_health_bar() -> void:
 
 func die() -> void:
 	print("💀 Player Died!")
-	if anim.has_animation("death"):
+
+	if "death" in anim.sprite_frames.get_animation_names():
 		anim.play("death")
+		velocity = Vector2.ZERO
+		set_physics_process(false)  # stop movement/attacks
+		# wait for animation to finish before removing player
+		await anim.animation_finished
+		queue_free()
 	else:
 		queue_free()

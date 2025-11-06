@@ -1,7 +1,95 @@
-[gd_scene format=3 uid="uid://nxojlrbrypef"]
+[gd_scene load_steps=13 format=3 uid="uid://nxojlrbrypef"]
 
-[node name="CharacterBody2D" type="CharacterBody2D"]
+[ext_resource type="Script" uid="uid://bnkmtp8pah72i" path="res://enemy.gd" id="1_tt7e2"]
+[ext_resource type="Texture2D" uid="uid://5woi234faabn" path="res://walk.png" id="2_s7bn3"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2hac7"]
+atlas = ExtResource("2_s7bn3")
+region = Rect2(128, 230, 32, 46)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e6d4v"]
+atlas = ExtResource("2_s7bn3")
+region = Rect2(160, 230, 32, 46)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qp131"]
+atlas = ExtResource("2_s7bn3")
+region = Rect2(192, 230, 32, 46)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6do27"]
+atlas = ExtResource("2_s7bn3")
+region = Rect2(224, 230, 32, 46)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rvmyp"]
+atlas = ExtResource("2_s7bn3")
+region = Rect2(256, 230, 32, 46)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2nxwx"]
+atlas = ExtResource("2_s7bn3")
+region = Rect2(288, 230, 32, 46)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_52xpa"]
+atlas = ExtResource("2_s7bn3")
+region = Rect2(320, 230, 32, 46)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jdgko"]
+atlas = ExtResource("2_s7bn3")
+region = Rect2(352, 230, 32, 46)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_j4qr3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2hac7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e6d4v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qp131")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6do27")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rvmyp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2nxwx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_52xpa")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jdgko")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 10.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_s7bn3"]
+size = Vector2(17, 24)
+
+[node name="Enemy" type="CharacterBody2D" groups=["enemy"]]
+script = ExtResource("1_tt7e2")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_j4qr3")
+animation = &"walk"
+frame = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0.5, 4)
+shape = SubResource("RectangleShape2D_s7bn3")
+
+[node name="HealthBar" type="Node2D" parent="."]
+
+[node name="ProgressBar" type="ProgressBar" parent="HealthBar"]
+offset_left = -19.0
+offset_top = 21.0
+offset_right = 21.0
+offset_bottom = 26.0
+theme_override_colors/font_color = Color(0, 0.9490196, 0, 1)
+max_value = 30.0
+show_percentage = false
