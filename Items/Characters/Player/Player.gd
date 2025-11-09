@@ -335,11 +335,15 @@ func play_hit_effects(from: Vector2 = Vector2.ZERO) -> void:
 func die() -> void:
 	print("💀 Player died")
 
-	# --- 1️⃣ Instant freeze of world physics ---
-	# This stops all gameplay before visuals trigger
+	# --- 1️⃣ Stop all player motion instantly ---
+	velocity = Vector2.ZERO
+	set_physics_process(false)
+	set_process_input(false)
+
+	# --- 2️⃣ Pause entire world ---
 	get_tree().paused = true
 
-	# --- 2️⃣ Allow only visuals + animation to keep processing ---
+	# --- 3️⃣ Allow only animation + overlays to keep running ---
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	if anim:
 		anim.process_mode = Node.PROCESS_MODE_ALWAYS
@@ -348,14 +352,11 @@ func die() -> void:
 	var grey_layer = get_tree().get_first_node_in_group("greyscale")
 	var death_overlay = get_tree().get_first_node_in_group("death_overlay")
 
-	if dmg_overlay:
-		dmg_overlay.process_mode = Node.PROCESS_MODE_ALWAYS
-	if grey_layer:
-		grey_layer.process_mode = Node.PROCESS_MODE_ALWAYS
-	if death_overlay:
-		death_overlay.process_mode = Node.PROCESS_MODE_ALWAYS
+	for node in [dmg_overlay, grey_layer, death_overlay]:
+		if node:
+			node.process_mode = Node.PROCESS_MODE_ALWAYS
 
-	# --- 3️⃣ Trigger visuals simultaneously ---
+	# --- 4️⃣ Trigger visuals simultaneously ---
 	if dmg_overlay:
 		dmg_overlay.flash(0.6, 0.3)  # red vignette flash
 
@@ -370,7 +371,7 @@ func die() -> void:
 				0.0, 1.0, 0.4
 			)
 
-	# --- 4️⃣ Play death animation (still runs even when paused) ---
+	# --- 5️⃣ Play death animation (still runs when paused) ---
 	if anim and "death" in anim.sprite_frames.get_animation_names():
 		print("🎭 Playing death animation")
 		anim.play("death")
@@ -379,7 +380,7 @@ func die() -> void:
 
 	await anim.animation_finished
 
-	# --- 5️⃣ Fade to black ---
+	# --- 6️⃣ Fade to black ---
 	if death_overlay:
 		print("🕳️ Fading to black...")
 		await death_overlay.fade_to_black(2.0)
