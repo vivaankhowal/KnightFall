@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://cvmaqq4astvit"]
+[gd_scene load_steps=27 format=3 uid="uid://cvmaqq4astvit"]
 
 [ext_resource type="Texture2D" uid="uid://0q42nkd0v1c2" path="res://KnightFall Assets/TileSets/atlas_floor-16x16.png" id="1_x3qh4"]
 [ext_resource type="Texture2D" uid="uid://c5qa4q21vf4rc" path="res://KnightFall Assets/TileSets/atlas_walls_high-16x32.png" id="2_1y7hs"]
@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://gkyxsqanw5lw" path="res://KnightFall Assets/TileSets/pedestals.png" id="6_0adf1"]
 [ext_resource type="Texture2D" uid="uid://ycor7fo7qprw" path="res://KnightFall Assets/TileSets/supplies_objects.png" id="7_8g0e2"]
 [ext_resource type="Texture2D" uid="uid://c61cpp3vkeee1" path="res://Items/Characters/Armorer/armor shop.png" id="9_rnjb2"]
+[ext_resource type="PackedScene" uid="uid://dy8h8pxa28i07" path="res://DamageOverlay.tscn" id="13_2w4de"]
 [ext_resource type="PackedScene" uid="uid://nxojlrbrypef" path="res://Enemy.tscn" id="13_otngv"]
 [ext_resource type="PackedScene" uid="uid://du14qbrbfk25a" path="res://Items/Characters/Armorer/Armorer.tscn" id="17_5j88a"]
 
@@ -2467,3 +2468,5 @@ scale = Vector2(0.6, 0.6)
 
 [node name="Enemy" parent="." instance=ExtResource("13_otngv")]
 position = Vector2(314, 599)
+
+[node name="DamageOverlay" parent="." instance=ExtResource("13_2w4de")]

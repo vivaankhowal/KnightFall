@@ -1,11 +1,72 @@
-[gd_scene load_steps=2 format=3 uid="uid://dy8h8pxa28i07"]
+[gd_scene load_steps=10 format=3 uid="uid://dy8h8pxa28i07"]
 
 [ext_resource type="Script" uid="uid://dprpu0ec5depo" path="res://damage_overlay.gd" id="1_mmfsr"]
 
-[node name="DamageOverlay" type="CanvasLayer"]
+[sub_resource type="Gradient" id="Gradient_mmfsr"]
+colors = PackedColorArray(1, 0, 0, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_opi2w"]
+gradient = SubResource("Gradient_mmfsr")
+fill = 1
+
+[sub_resource type="Gradient" id="Gradient_opi2w"]
+colors = PackedColorArray(1, 0, 0, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_cea22"]
+gradient = SubResource("Gradient_opi2w")
+fill = 1
+
+[sub_resource type="Gradient" id="Gradient_cea22"]
+colors = PackedColorArray(1, 0, 0, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_spgxq"]
+gradient = SubResource("Gradient_cea22")
+fill = 1
+
+[sub_resource type="Gradient" id="Gradient_w3cf7"]
+colors = PackedColorArray(1, 0, 0, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_fg4ul"]
+gradient = SubResource("Gradient_w3cf7")
+fill = 1
+
+[node name="DamageOverlay" type="CanvasLayer" groups=["overlay"]]
 script = ExtResource("1_mmfsr")
 
-[node name="Overlay" type="TextureRect" parent="." groups=["overlay"]]
+[node name="TopLeft" type="TextureRect" parent="." groups=["overlay"]]
 modulate = Color(1, 0, 0, 1)
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_opi2w")
+
+[node name="TopRight" type="TextureRect" parent="." groups=["overlay"]]
+modulate = Color(1, 0, 0, 1)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_cea22")
+flip_h = true
+
+[node name="BottomLeft" type="TextureRect" parent="." groups=["overlay"]]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_spgxq")
+flip_v = true
+
+[node name="BottomRight" type="TextureRect" parent="." groups=["overlay"]]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_fg4ul")
+flip_h = true
+flip_v = true
