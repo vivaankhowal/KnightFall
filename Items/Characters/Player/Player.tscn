@@ -165,7 +165,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"horizontal_slash",
-"speed": 13.0
+"speed": 15.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -318,7 +318,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"vertical_slash",
-"speed": 13.0
+"speed": 15.0
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rwn2q"]
@@ -326,6 +326,7 @@ radius = 6.666666
 height = 28.333332
 
 [node name="Player" type="CharacterBody2D" groups=["player"]]
+collision_mask = 2
 script = ExtResource("1_es1fo")
 slash_scene = ExtResource("3_c14pu")
 dust_scene = ExtResource("3_jgglj")
@@ -337,7 +338,7 @@ texture_filter = 1
 position = Vector2(0, -6)
 scale = Vector2(0.25, 0.25)
 sprite_frames = SubResource("SpriteFrames_xhfnw")
-animation = &"charged_slash"
+animation = &"death"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(2.5, -4.1666665)
@@ -351,13 +352,13 @@ script = ExtResource("100_f2hkb")
 position = Vector2(3.333332, -1.6666666)
 
 [node name="HealthBar" type="Node2D" parent="."]
-visible = false
+position = Vector2(1, -39)
 
 [node name="ProgressBar" type="ProgressBar" parent="HealthBar"]
-offset_left = -16.666666
-offset_top = 9.166666
-offset_right = 23.333334
-offset_bottom = 15.833332
+offset_left = -30.0
+offset_top = -146.0
+offset_right = 65.0
+offset_bottom = -109.333336
 theme_override_colors/font_color = Color(0, 0.9490196, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 1, 0, 1)
 show_percentage = false

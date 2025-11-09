@@ -5,16 +5,16 @@ extends CharacterBody2D
 # -------------------------------
 @export var move_speed: float = 200.0
 @export var attack_cooldown: float = 0.4
+@export var attack_stop_time: float = 0.15
 @export var slash_scene: PackedScene
 @export var dust_scene: PackedScene
 @export var weapon_damage_upgrade: float = 1.0
-@export var attack_stop_time: float = 0.15
-@export var max_health: int = 100   
+@export var max_health: int = 100
 @onready var cam: Camera2D = $Camera2D
 
 # --- Dash Config ---
 @export var dash_speed: float = 600.0
-@export var dash_duration: float = 0.1
+@export var dash_duration: float = 0.2
 @export var dash_cooldown: float = 0.1
 @export var dash_smoke_scene: PackedScene
 @export var dash_zoom_in: Vector2 = Vector2(4.4, 4.4)
@@ -22,7 +22,6 @@ extends CharacterBody2D
 @export var dash_zoom_speed: float = 0.15
 @export var dash_ghost_scene: PackedScene
 @export var ghost_spawn_interval: float = 0.05
-
 
 # -------------------------------
 # STATE
@@ -35,8 +34,8 @@ var attack_hit_triggered: bool = false
 var current_attack: String = ""
 var attack_freeze_timer: float = 0.0
 var current_health: int = max_health
-var locked_attack_dir: Vector2 = Vector2.ZERO
 var ghost_timer: float = 0.0
+var locked_attack_dir: Vector2 = Vector2.ZERO
 
 # --- Dash State ---
 var is_dashing: bool = false
@@ -52,7 +51,6 @@ var dash_dir: Vector2 = Vector2.ZERO
 @onready var attack_timer: Timer = Timer.new()
 @onready var health_bar: ProgressBar = $HealthBar/ProgressBar
 
-
 # -------------------------------
 # READY
 # -------------------------------
@@ -64,36 +62,32 @@ func _ready() -> void:
 	current_health = max_health
 	update_health_bar()
 
-
 # -------------------------------
 # MAIN LOOP
 # -------------------------------
 func _physics_process(delta: float) -> void:
 	handle_dash_timers(delta)
 
-	# --- Prevent scale buildup ---
-	if not is_dashing and anim.scale != Vector2.ONE:
-		anim.scale = Vector2.ONE
-
-	# --- Handle Dash Movement ---
+	# --- Dash movement ---
 	if is_dashing:
 		velocity = dash_dir * dash_speed
 		move_and_slide()
-
-		# Spawn ghost trail while dashing
 		ghost_timer -= delta
 		if ghost_timer <= 0:
 			spawn_dash_ghost()
 			ghost_timer = ghost_spawn_interval
 		return
 
-	handle_movement_input(delta)
-	move_and_slide()   # 🟢 movement always active (no freeze)
+	# --- Attack freeze moment ---
+	if attack_freeze_timer > 0.0:
+		attack_freeze_timer -= delta
+		move_and_slide()
+	else:
+		handle_movement_input(delta)
+		move_and_slide()
 
-	# --- Keep health bar above player ---
 	if health_bar:
 		$HealthBar.position = Vector2(0, -40)
-
 
 # -------------------------------
 # MOVEMENT INPUT
@@ -106,13 +100,13 @@ func handle_movement_input(delta: float) -> void:
 		).normalized()
 
 	velocity = input_dir * move_speed
+
 	if input_dir != Vector2.ZERO:
 		update_facing(input_dir)
 
 	handle_attack_input(delta)
 	handle_dash_input()
 	update_animation()
-
 
 # -------------------------------
 # DASH MECHANIC ⚡
@@ -125,17 +119,14 @@ func start_dash() -> void:
 	is_dashing = true
 	can_dash = false
 	dash_timer = dash_duration
-
 	dash_dir = input_dir if input_dir != Vector2.ZERO else (Vector2.RIGHT if facing_right else Vector2.LEFT)
-	anim.scale = Vector2.ONE
 	spawn_dash_smoke()
 
-	# --- CAMERA ZOOM IN ---
 	if cam:
 		var tw = create_tween()
-		tw.tween_property(cam, "zoom", dash_zoom_in, dash_zoom_speed).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		tw.tween_property(cam, "zoom", dash_zoom_in, dash_zoom_speed).set_trans(Tween.TRANS_SINE)
 
-	# --- WHITE SILHOUETTE + SQUASH ---
+	# --- White silhouette shader ---
 	var mat := ShaderMaterial.new()
 	var shader := Shader.new()
 	shader.code = """
@@ -147,19 +138,14 @@ func start_dash() -> void:
 	mat.shader = shader
 	anim.material = mat
 
-	var tw = create_tween()
-	tw.parallel().tween_property(anim, "scale", Vector2(1.4, 0.6), 0.05).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	tw.tween_property(anim, "scale", Vector2(1.0, 1.0), 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
-
 func end_dash() -> void:
 	is_dashing = false
 	dash_cooldown_timer = dash_cooldown
-	anim.scale = Vector2(1, 1)
 	anim.material = null
 
 	if cam:
 		var tw = create_tween()
-		tw.tween_property(cam, "zoom", normal_zoom, dash_zoom_speed).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+		tw.tween_property(cam, "zoom", normal_zoom, dash_zoom_speed)
 
 func handle_dash_timers(delta: float) -> void:
 	if is_dashing:
@@ -171,14 +157,12 @@ func handle_dash_timers(delta: float) -> void:
 		if dash_cooldown_timer <= 0:
 			can_dash = true
 
-
 # -------------------------------
 # ATTACK LOGIC ⚔️
 # -------------------------------
 func handle_attack_input(delta: float) -> void:
 	if attack_locked or is_dashing:
 		return
-
 	if Input.is_action_just_pressed("attack"):
 		start_attack()
 
@@ -195,8 +179,8 @@ func start_attack() -> void:
 	facing_right = dir_to_mouse.x >= 0
 	anim.flip_h = not facing_right
 
-	# 🟢 Movement no longer frozen here
-	attack_freeze_timer = 0.0
+	velocity = Vector2.ZERO
+	attack_freeze_timer = attack_stop_time
 
 	if angle < -25 and angle > -155:
 		current_attack = "vertical_slash"
@@ -207,7 +191,6 @@ func start_attack() -> void:
 
 	anim.play(current_attack)
 	attack_timer.start(attack_cooldown)
-
 
 # -------------------------------
 # FRAME EVENTS
@@ -222,7 +205,6 @@ func _on_frame_changed() -> void:
 
 	if anim.animation == "run" and (anim.frame == 2 or anim.frame == 6):
 		spawn_dust()
-
 
 # -------------------------------
 # ATTACK PROJECTILE
@@ -240,13 +222,11 @@ func spawn_slash_projectile(direction: Vector2) -> void:
 
 	var slash = slash_scene.instantiate()
 	get_parent().add_child(slash)
-
 	var spawn_distance := 40.0
 	slash.global_position = global_position + direction * spawn_distance
 	slash.rotation = direction.angle()
 	slash.direction = direction
 	slash.damage_multiplier = weapon_damage_upgrade
-
 
 # -------------------------------
 # ATTACK RESET
@@ -256,7 +236,6 @@ func _on_attack_timer_timeout() -> void:
 	attack_locked = false
 	current_attack = ""
 	attack_hit_triggered = false
-
 
 # -------------------------------
 # FACING + ANIMATION
@@ -276,7 +255,6 @@ func update_animation() -> void:
 	else:
 		anim.play("run")
 
-
 # -------------------------------
 # FRAME-SYNCED DUST 💨
 # -------------------------------
@@ -290,38 +268,68 @@ func spawn_dust() -> void:
 	dust.global_position = global_position + offset_dir * offset_distance + Vector2(0, 8)
 	dust.flip_h = not facing_right
 
-
 # -------------------------------
 # HEALTH SYSTEM ❤️
 # -------------------------------
-func take_damage(amount: int) -> void:
-	if is_dashing:
-		return
-	current_health -= amount
-	current_health = clamp(current_health, 0, max_health)
-	update_health_bar()
-	if current_health <= 0:
-		die()
-
-func heal(amount: int) -> void:
-	current_health = min(current_health + amount, max_health)
-	update_health_bar()
+var is_invincible: bool = false
+@export var invincibility_time: float = 0.6
 
 func update_health_bar() -> void:
 	if health_bar:
 		health_bar.value = current_health
 
+func take_damage(amount: int) -> void:
+	if is_dashing or is_invincible:
+		return
+
+	current_health -= amount
+	current_health = clamp(current_health, 0, max_health)
+	update_health_bar()
+	play_hit_effects()
+
+	if current_health <= 0:
+		die()
+
+func play_hit_effects() -> void:
+	is_invincible = true
+	is_attacking = false
+	is_dashing = false
+
+	# Lock movement during hit
+	set_physics_process(false)
+
+	# --- Play hit animation ---
+	if "hit" in anim.sprite_frames.get_animation_names():
+		anim.play("hit")
+		await anim.animation_finished
+
+	set_physics_process(true)
+
+	# --- Screen shake ---
+	if cam:
+		cam.shake(6, 0.15)
+
+	# --- Red overlay flash ---
+	var overlay = get_tree().get_first_node_in_group("overlay")
+	if overlay:
+		overlay.flash()
+
+	await get_tree().create_timer(invincibility_time).timeout
+	is_invincible = false
+
+
 func die() -> void:
-	print("💀 Player Died!")
+	if is_dashing:
+		end_dash()
+
 	if "death" in anim.sprite_frames.get_animation_names():
-		anim.play("death")
-		velocity = Vector2.ZERO
+		is_attacking = false
 		set_physics_process(false)
+		anim.play("death")
 		await anim.animation_finished
 		queue_free()
 	else:
 		queue_free()
-
 
 # -------------------------------
 # DASH SMOKE 💨
@@ -339,9 +347,8 @@ func spawn_dash_smoke() -> void:
 	smoke.flip_h = not facing_right
 	smoke.rotation = 0.0
 
-
 # -------------------------------
-# DASH GHOST TRAIL 👻 (with fade)
+# DASH GHOST TRAIL 👻 (Blue + Fade)
 # -------------------------------
 func spawn_dash_ghost() -> void:
 	if dash_ghost_scene == null:
@@ -360,8 +367,8 @@ func spawn_dash_ghost() -> void:
 		ghost.texture = frame_tex
 		ghost.flip_h = anim.flip_h
 		ghost.scale = Vector2(0.3, 0.3)
+		ghost.modulate = Color(0.4, 0.7, 1.0, 0.8)  # Blue ghost
 
-	# 🟢 Fade out smoothly, then free
 	var tw = create_tween()
-	tw.tween_property(ghost, "modulate:a", 0.0, 0.25).set_trans(Tween.TRANS_SINE)
+	tw.tween_property(ghost, "modulate:a", 0.0, 0.25)
 	tw.tween_callback(Callable(ghost, "queue_free"))

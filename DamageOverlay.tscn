@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://dy8h8pxa28i07"]
+
+[ext_resource type="Script" uid="uid://dprpu0ec5depo" path="res://damage_overlay.gd" id="1_mmfsr"]
+
+[node name="DamageOverlay" type="CanvasLayer"]
+script = ExtResource("1_mmfsr")
+
+[node name="Overlay" type="TextureRect" parent="." groups=["overlay"]]
+modulate = Color(1, 0, 0, 1)
+offset_right = 40.0
+offset_bottom = 40.0

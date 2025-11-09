@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://nxojlrbrypef"]
+[gd_scene load_steps=14 format=3 uid="uid://nxojlrbrypef"]
 
 [ext_resource type="Script" uid="uid://bnkmtp8pah72i" path="res://enemy.gd" id="1_tt7e2"]
 [ext_resource type="Texture2D" uid="uid://5woi234faabn" path="res://walk.png" id="2_s7bn3"]
@@ -68,9 +68,14 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_s7bn3"]
-size = Vector2(17, 24)
+size = Vector2(21, 27)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2hac7"]
+size = Vector2(26, 32)
 
 [node name="Enemy" type="CharacterBody2D" groups=["enemy"]]
+collision_layer = 2
+collision_mask = 0
 script = ExtResource("1_tt7e2")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -80,7 +85,7 @@ animation = &"walk"
 frame = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0.5, 4)
+position = Vector2(-0.5, 4.5)
 shape = SubResource("RectangleShape2D_s7bn3")
 
 [node name="HealthBar" type="Node2D" parent="."]
@@ -93,3 +98,13 @@ offset_bottom = 26.0
 theme_override_colors/font_color = Color(0, 0.9490196, 0, 1)
 max_value = 30.0
 show_percentage = false
+
+[node name="AttackArea" type="Area2D" parent="."]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
+position = Vector2(-1, 4)
+shape = SubResource("RectangleShape2D_2hac7")
+
+[connection signal="body_entered" from="AttackArea" to="." method="_on_attack_area_body_entered"]
+[connection signal="body_exited" from="AttackArea" to="." method="_on_attack_area_body_exited"]
