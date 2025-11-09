@@ -277,10 +277,11 @@ func spawn_dust() -> void:
 	dust.flip_h = not facing_right
 
 # -------------------------------
-# HEALTH SYSTEM ❤️
+# HEALTH + INVINCIBILITY ❤️‍🔥
 # -------------------------------
 var is_invincible: bool = false
-@export var invincibility_time: float = 0.6
+@export var invincibility_time: float = 1
+@export var flash_interval: float = 0.1
 
 func update_health_bar() -> void:
 	if health_bar:
@@ -300,10 +301,6 @@ func take_damage(amount: int, from: Vector2 = Vector2.ZERO) -> void:
 		die()
 
 func play_hit_effects(from: Vector2 = Vector2.ZERO) -> void:
-	if is_invincible:
-		return
-
-	is_invincible = true
 	is_attacking = false
 	is_dashing = false
 	is_hit_stunned = true
@@ -315,18 +312,19 @@ func play_hit_effects(from: Vector2 = Vector2.ZERO) -> void:
 	var knockback_force = 400.0
 	var knockback_time = 0.15
 
-	# --- Immediate shake + flash ---
+	# --- Immediate shake + overlay flash ---
 	if cam:
 		cam.shake(6, 0.15)
 	var overlay = get_tree().get_first_node_in_group("overlay")
 	if overlay:
 		overlay.flash()
 
+	# --- Start invincibility + player flash right away ---
+	trigger_invincibility_flash()
+
 	# --- Play hit animation and lock control ---
 	if "hit" in anim.sprite_frames.get_animation_names():
 		anim.play("hit")
-	else:
-		print("⚠️ No 'hit' animation found!")
 
 	# disable normal motion during hit
 	set_physics_process(false)
@@ -334,10 +332,13 @@ func play_hit_effects(from: Vector2 = Vector2.ZERO) -> void:
 	# --- Small hit freeze (impact pause) ---
 	await get_tree().create_timer(0.05).timeout
 
-	# --- Knockback motion ---
+# --- Knockback motion (uses physics to prevent clipping) ---
 	var knockback_timer := get_tree().create_timer(knockback_time)
 	while knockback_timer.time_left > 0:
-		position += knockback_dir * knockback_force * get_process_delta_time()
+		var motion: Vector2 = knockback_dir * knockback_force * get_process_delta_time()
+		var collision = move_and_collide(motion)
+		if collision:
+			break  # stop knockback if wall hit
 		await get_tree().process_frame
 
 	# --- Wait until animation finishes if it exists ---
@@ -349,11 +350,27 @@ func play_hit_effects(from: Vector2 = Vector2.ZERO) -> void:
 	is_hit_stunned = false
 	velocity = Vector2.ZERO
 
-	# --- Invincibility window ---
-	await get_tree().create_timer(invincibility_time).timeout
+
+func trigger_invincibility_flash() -> void:
+	is_invincible = true
+	var flashing := false
+	var elapsed := 0.0
+
+	while elapsed < invincibility_time:
+		if flashing:
+			anim.modulate = Color(1, 1, 1)
+		else:
+			anim.modulate = Color(1, 0.3, 0.3)
+		flashing = not flashing
+		await get_tree().create_timer(flash_interval).timeout
+		elapsed += flash_interval
+
+	anim.modulate = Color(1, 1, 1)
 	is_invincible = false
 
-
+# -------------------------------
+# DEATH ☠️
+# -------------------------------
 func die() -> void:
 	if is_dashing:
 		end_dash()
@@ -403,7 +420,7 @@ func spawn_dash_ghost() -> void:
 		ghost.texture = frame_tex
 		ghost.flip_h = anim.flip_h
 		ghost.scale = Vector2(0.3, 0.3)
-		ghost.modulate = Color(0.4, 0.7, 1.0, 0.8)  # Blue ghost
+		ghost.modulate = Color(0.4, 0.7, 1.0, 0.8)
 
 	var tw = create_tween()
 	tw.tween_property(ghost, "modulate:a", 0.0, 0.25)
