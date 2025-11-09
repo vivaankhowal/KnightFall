@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://c8pb3mk5fnrp6"]
+
+[ext_resource type="Script" uid="uid://c8g31u31qr1td" path="res://FlashOverlay.gd" id="1_utx0e"]
+
+[node name="ColorRect" type="ColorRect"]
+offset_right = 40.0
+offset_bottom = 40.0
+color = Color(1, 1, 1, 0)
+script = ExtResource("1_utx0e")
