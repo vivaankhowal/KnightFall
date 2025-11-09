@@ -324,8 +324,8 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xgqey"]
 size = Vector2(20, 26)
 
-[node name="Player" type="CharacterBody2D" groups=["player"]]
-collision_mask = 2
+[node name="Player" type="CharacterBody2D" groups=["freezeable", "player"]]
+collision_mask = 6
 script = ExtResource("1_es1fo")
 slash_scene = ExtResource("3_c14pu")
 dust_scene = ExtResource("3_jgglj")
@@ -333,11 +333,12 @@ dash_smoke_scene = ExtResource("4_gpqdx")
 dash_ghost_scene = ExtResource("5_7bl4c")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+process_mode = 3
 texture_filter = 1
 position = Vector2(0, -6)
 scale = Vector2(0.25, 0.25)
 sprite_frames = SubResource("SpriteFrames_xhfnw")
-animation = &"hit"
+animation = &"death"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(3, -6)

@@ -8,8 +8,8 @@ size = Vector2(404, 101)
 
 [node name="SlashProjectile" type="Area2D"]
 scale = Vector2(0.15, 0.3)
-collision_layer = 4
-collision_mask = 2
+collision_layer = 8
+collision_mask = 4
 script = ExtResource("1_jlsnl")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

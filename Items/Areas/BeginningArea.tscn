@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://cvmaqq4astvit"]
+[gd_scene load_steps=29 format=3 uid="uid://cvmaqq4astvit"]
 
 [ext_resource type="Texture2D" uid="uid://0q42nkd0v1c2" path="res://KnightFall Assets/TileSets/atlas_floor-16x16.png" id="1_x3qh4"]
 [ext_resource type="Texture2D" uid="uid://c5qa4q21vf4rc" path="res://KnightFall Assets/TileSets/atlas_walls_high-16x32.png" id="2_1y7hs"]
@@ -12,6 +12,8 @@
 [ext_resource type="Texture2D" uid="uid://c61cpp3vkeee1" path="res://Items/Characters/Armorer/armor shop.png" id="9_rnjb2"]
 [ext_resource type="PackedScene" uid="uid://dy8h8pxa28i07" path="res://DamageOverlay.tscn" id="13_2w4de"]
 [ext_resource type="PackedScene" uid="uid://nxojlrbrypef" path="res://Enemy.tscn" id="13_otngv"]
+[ext_resource type="PackedScene" uid="uid://cirgf1swhvm6p" path="res://DeathOverlay.tscn" id="14_2w4de"]
+[ext_resource type="PackedScene" uid="uid://d066s6diwhqgh" path="res://GreyscaleLayer.tscn" id="14_av8yy"]
 [ext_resource type="PackedScene" uid="uid://du14qbrbfk25a" path="res://Items/Characters/Armorer/Armorer.tscn" id="17_5j88a"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_npq0p"]
@@ -1988,6 +1990,7 @@ texture = ExtResource("7_8g0e2")
 
 [sub_resource type="TileSet" id="TileSet_iaq17"]
 physics_layer_0/collision_layer = 2
+physics_layer_0/collision_mask = 0
 sources/0 = SubResource("TileSetAtlasSource_npq0p")
 sources/1 = SubResource("TileSetAtlasSource_nfswu")
 sources/2 = SubResource("TileSetAtlasSource_q0h7r")
@@ -2458,15 +2461,19 @@ tile_set = SubResource("TileSet_0adf1")
 format = 2
 layer_0/tile_data = PackedInt32Array(-65530, 524288, 1, 6, 524288, 2, 65542, 524288, 3, -65529, 589824, 1, 7, 589824, 2, 65543, 589824, 3, -65528, 655360, 1, 8, 655360, 2, 65544, 655360, 3, 65545, 720896, 1, 131081, 720896, 2, 196617, 720896, 3, 65546, 786432, 1, 131082, 786432, 2, 196618, 786432, 3, 65540, 720896, 1, 131076, 720896, 2, 196612, 720896, 3, 65541, 786432, 1, 131077, 786432, 2, 196613, 786432, 3)
 
-[node name="CharacterBody2D" parent="." instance=ExtResource("2_npq0p")]
+[node name="CharacterBody2D" parent="." groups=["freezable"] instance=ExtResource("2_npq0p")]
 position = Vector2(49.000004, 584)
 
-[node name="Armorer" parent="." instance=ExtResource("17_5j88a")]
+[node name="Armorer" parent="." groups=["freezable"] instance=ExtResource("17_5j88a")]
 z_index = 11
 position = Vector2(-1089, -436)
 scale = Vector2(0.6, 0.6)
 
-[node name="Enemy" parent="." instance=ExtResource("13_otngv")]
-position = Vector2(314, 599)
+[node name="Enemy" parent="." groups=["freezable"] instance=ExtResource("13_otngv")]
+position = Vector2(179, 590)
+
+[node name="GreyscaleLayer" parent="." groups=["greyscale"] instance=ExtResource("14_av8yy")]
 
 [node name="DamageOverlay" parent="." instance=ExtResource("13_2w4de")]
+
+[node name="DeathOverlay" parent="." instance=ExtResource("14_2w4de")]

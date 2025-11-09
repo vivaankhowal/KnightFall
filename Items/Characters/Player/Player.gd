@@ -9,7 +9,7 @@ extends CharacterBody2D
 @export var slash_scene: PackedScene
 @export var dust_scene: PackedScene
 @export var weapon_damage_upgrade: float = 1.0
-@export var max_health: int = 100
+@export var max_health: int = 1
 @onready var cam: Camera2D = $Camera2D
 
 # --- Dash Config ---
@@ -52,7 +52,6 @@ var dash_dir: Vector2 = Vector2.ZERO
 @onready var attack_timer: Timer = Timer.new()
 @onready var health_bar: ProgressBar = $HealthBar/ProgressBar
 
-
 # -------------------------------
 # READY
 # -------------------------------
@@ -70,7 +69,6 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	handle_dash_timers(delta)
 
-	# --- Dash movement ---
 	if is_dashing:
 		velocity = dash_dir * dash_speed
 		move_and_slide()
@@ -80,7 +78,6 @@ func _physics_process(delta: float) -> void:
 			ghost_timer = ghost_spawn_interval
 		return
 
-	# --- Attack freeze moment ---
 	if attack_freeze_timer > 0.0:
 		attack_freeze_timer -= delta
 		move_and_slide()
@@ -128,7 +125,6 @@ func start_dash() -> void:
 		var tw = create_tween()
 		tw.tween_property(cam, "zoom", dash_zoom_in, dash_zoom_speed).set_trans(Tween.TRANS_SINE)
 
-	# --- White silhouette shader ---
 	var mat := ShaderMaterial.new()
 	var shader := Shader.new()
 	shader.code = """
@@ -221,7 +217,6 @@ func spawn_slash_projectile(direction: Vector2) -> void:
 	if slash_scene == null:
 		push_warning("Slash scene not assigned!")
 		return
-
 	var slash = slash_scene.instantiate()
 	get_parent().add_child(slash)
 	var spawn_distance := 40.0
@@ -250,7 +245,6 @@ func update_facing(dir: Vector2) -> void:
 func update_animation() -> void:
 	if is_hit_stunned:
 		return
-
 	if is_attacking:
 		return
 	elif is_dashing:
@@ -277,11 +271,10 @@ func spawn_dust() -> void:
 	dust.flip_h = not facing_right
 
 # -------------------------------
-# HEALTH + INVINCIBILITY ❤️‍🔥
+# HEALTH SYSTEM ❤️
 # -------------------------------
 var is_invincible: bool = false
-@export var invincibility_time: float = 1
-@export var flash_interval: float = 0.1
+@export var invincibility_time: float = 0.6
 
 func update_health_bar() -> void:
 	if health_bar:
@@ -290,102 +283,113 @@ func update_health_bar() -> void:
 func take_damage(amount: int, from: Vector2 = Vector2.ZERO) -> void:
 	if is_dashing or is_invincible:
 		return
-
 	current_health -= amount
 	current_health = clamp(current_health, 0, max_health)
 	update_health_bar()
-
 	play_hit_effects(from)
-
 	if current_health <= 0:
 		die()
 
 func play_hit_effects(from: Vector2 = Vector2.ZERO) -> void:
+	if is_invincible or current_health <= 0:
+		return
+	is_invincible = true
 	is_attacking = false
 	is_dashing = false
 	is_hit_stunned = true
 
-	# --- Directional knockback ---
+	# Knockback
 	var knockback_dir = Vector2.ZERO
 	if from != Vector2.ZERO:
 		knockback_dir = (global_position - from).normalized()
 	var knockback_force = 400.0
 	var knockback_time = 0.15
 
-	# --- Immediate shake + overlay flash ---
+	# Shake + overlay
 	if cam:
 		cam.shake(6, 0.15)
 	var overlay = get_tree().get_first_node_in_group("overlay")
 	if overlay:
 		overlay.flash()
 
-	# --- Start invincibility + player flash right away ---
-	trigger_invincibility_flash()
-
-	# --- Play hit animation and lock control ---
-	if "hit" in anim.sprite_frames.get_animation_names():
-		anim.play("hit")
-
-	# disable normal motion during hit
-	set_physics_process(false)
-
-	# --- Small hit freeze (impact pause) ---
+	# Small impact freeze
 	await get_tree().create_timer(0.05).timeout
 
-# --- Knockback motion (uses physics to prevent clipping) ---
+	# Knockback with collision
 	var knockback_timer := get_tree().create_timer(knockback_time)
 	while knockback_timer.time_left > 0:
 		var motion: Vector2 = knockback_dir * knockback_force * get_process_delta_time()
 		var collision = move_and_collide(motion)
 		if collision:
-			break  # stop knockback if wall hit
+			break
 		await get_tree().process_frame
 
-	# --- Wait until animation finishes if it exists ---
-	if anim.is_playing():
-		await anim.animation_finished
-
-	# re-enable control
-	set_physics_process(true)
 	is_hit_stunned = false
 	velocity = Vector2.ZERO
-
-
-func trigger_invincibility_flash() -> void:
-	is_invincible = true
-	var flashing := false
-	var elapsed := 0.0
-
-	while elapsed < invincibility_time:
-		if flashing:
-			anim.modulate = Color(1, 1, 1)
-		else:
-			anim.modulate = Color(1, 0.3, 0.3)
-		flashing = not flashing
-		await get_tree().create_timer(flash_interval).timeout
-		elapsed += flash_interval
-
-	anim.modulate = Color(1, 1, 1)
+	await get_tree().create_timer(invincibility_time).timeout
 	is_invincible = false
 
 # -------------------------------
-# DEATH ☠️
+# DEATH SEQUENCE 💀
 # -------------------------------
 func die() -> void:
-	if is_dashing:
-		end_dash()
+	print("💀 Player died")
 
-	if "death" in anim.sprite_frames.get_animation_names():
-		is_attacking = false
-		set_physics_process(false)
+	# --- 1️⃣ Instant freeze of world physics ---
+	# This stops all gameplay before visuals trigger
+	get_tree().paused = true
+
+	# --- 2️⃣ Allow only visuals + animation to keep processing ---
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	if anim:
+		anim.process_mode = Node.PROCESS_MODE_ALWAYS
+
+	var dmg_overlay = get_tree().get_first_node_in_group("overlay")
+	var grey_layer = get_tree().get_first_node_in_group("greyscale")
+	var death_overlay = get_tree().get_first_node_in_group("death_overlay")
+
+	if dmg_overlay:
+		dmg_overlay.process_mode = Node.PROCESS_MODE_ALWAYS
+	if grey_layer:
+		grey_layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	if death_overlay:
+		death_overlay.process_mode = Node.PROCESS_MODE_ALWAYS
+
+	# --- 3️⃣ Trigger visuals simultaneously ---
+	if dmg_overlay:
+		dmg_overlay.flash(0.6, 0.3)  # red vignette flash
+
+	if grey_layer:
+		var rect = grey_layer.get_node_or_null("ColorRect")
+		if rect and rect.material:
+			var mat: ShaderMaterial = rect.material
+			print("🎞️ Starting greyscale fade...")
+			var tw := create_tween()
+			tw.tween_method(
+				func(value): mat.set_shader_parameter("intensity", value),
+				0.0, 1.0, 0.4
+			)
+
+	# --- 4️⃣ Play death animation (still runs even when paused) ---
+	if anim and "death" in anim.sprite_frames.get_animation_names():
+		print("🎭 Playing death animation")
 		anim.play("death")
-		await anim.animation_finished
-		queue_free()
 	else:
-		queue_free()
+		print("⚠️ No 'death' animation found!")
+
+	await anim.animation_finished
+
+	# --- 5️⃣ Fade to black ---
+	if death_overlay:
+		print("🕳️ Fading to black...")
+		await death_overlay.fade_to_black(2.0)
+	else:
+		print("⚠️ DeathOverlay not found!")
+
+	print("🪦 Death sequence complete.")
 
 # -------------------------------
-# DASH SMOKE 💨
+# DASH VISUALS
 # -------------------------------
 func spawn_dash_smoke() -> void:
 	if dash_smoke_scene == null:
@@ -400,28 +404,21 @@ func spawn_dash_smoke() -> void:
 	smoke.flip_h = not facing_right
 	smoke.rotation = 0.0
 
-# -------------------------------
-# DASH GHOST TRAIL 👻 (Blue + Fade)
-# -------------------------------
 func spawn_dash_ghost() -> void:
 	if dash_ghost_scene == null:
 		return
-
 	var ghost = dash_ghost_scene.instantiate()
 	get_parent().add_child(ghost)
-
 	var offset_distance := 15.0
 	var facing_dir := Vector2.RIGHT if facing_right else Vector2.LEFT
 	var offset := -facing_dir * offset_distance
 	ghost.global_position = global_position + offset
-
 	var frame_tex = anim.sprite_frames.get_frame_texture(anim.animation, anim.frame)
 	if frame_tex:
 		ghost.texture = frame_tex
 		ghost.flip_h = anim.flip_h
 		ghost.scale = Vector2(0.3, 0.3)
 		ghost.modulate = Color(0.4, 0.7, 1.0, 0.8)
-
 	var tw = create_tween()
 	tw.tween_property(ghost, "modulate:a", 0.0, 0.25)
 	tw.tween_callback(Callable(ghost, "queue_free"))
