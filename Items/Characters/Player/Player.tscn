@@ -321,9 +321,8 @@ animations = [{
 "speed": 15.0
 }]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rwn2q"]
-radius = 6.666666
-height = 28.333332
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xgqey"]
+size = Vector2(20, 26)
 
 [node name="Player" type="CharacterBody2D" groups=["player"]]
 collision_mask = 2
@@ -338,11 +337,11 @@ texture_filter = 1
 position = Vector2(0, -6)
 scale = Vector2(0.25, 0.25)
 sprite_frames = SubResource("SpriteFrames_xhfnw")
-animation = &"death"
+animation = &"hit"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(2.5, -4.1666665)
-shape = SubResource("CapsuleShape2D_rwn2q")
+position = Vector2(3, -6)
+shape = SubResource("RectangleShape2D_xgqey")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(4, 4)

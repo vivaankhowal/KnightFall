@@ -36,6 +36,7 @@ var attack_freeze_timer: float = 0.0
 var current_health: int = max_health
 var ghost_timer: float = 0.0
 var locked_attack_dir: Vector2 = Vector2.ZERO
+var is_hit_stunned: bool = false
 
 # --- Dash State ---
 var is_dashing: bool = false
@@ -50,6 +51,7 @@ var dash_dir: Vector2 = Vector2.ZERO
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 @onready var attack_timer: Timer = Timer.new()
 @onready var health_bar: ProgressBar = $HealthBar/ProgressBar
+
 
 # -------------------------------
 # READY
@@ -246,10 +248,16 @@ func update_facing(dir: Vector2) -> void:
 	anim.flip_h = not facing_right
 
 func update_animation() -> void:
+	if is_hit_stunned:
+		return
+
 	if is_attacking:
 		return
 	elif is_dashing:
-		anim.play("dash") if "dash" in anim.sprite_frames.get_animation_names() else anim.play("run")
+		if "dash" in anim.sprite_frames.get_animation_names():
+			anim.play("dash")
+		else:
+			anim.play("run")
 	elif input_dir == Vector2.ZERO:
 		anim.play("idle")
 	else:
@@ -278,42 +286,70 @@ func update_health_bar() -> void:
 	if health_bar:
 		health_bar.value = current_health
 
-func take_damage(amount: int) -> void:
+func take_damage(amount: int, from: Vector2 = Vector2.ZERO) -> void:
 	if is_dashing or is_invincible:
 		return
 
 	current_health -= amount
 	current_health = clamp(current_health, 0, max_health)
 	update_health_bar()
-	play_hit_effects()
+
+	play_hit_effects(from)
 
 	if current_health <= 0:
 		die()
 
-func play_hit_effects() -> void:
+func play_hit_effects(from: Vector2 = Vector2.ZERO) -> void:
+	if is_invincible:
+		return
+
 	is_invincible = true
 	is_attacking = false
 	is_dashing = false
+	is_hit_stunned = true
 
-	# Lock movement during hit
-	set_physics_process(false)
+	# --- Directional knockback ---
+	var knockback_dir = Vector2.ZERO
+	if from != Vector2.ZERO:
+		knockback_dir = (global_position - from).normalized()
+	var knockback_force = 400.0
+	var knockback_time = 0.15
 
-	# --- Play hit animation ---
-	if "hit" in anim.sprite_frames.get_animation_names():
-		anim.play("hit")
-		await anim.animation_finished
-
-	set_physics_process(true)
-
-	# --- Screen shake ---
+	# --- Immediate shake + flash ---
 	if cam:
 		cam.shake(6, 0.15)
-
-	# --- Red overlay flash ---
 	var overlay = get_tree().get_first_node_in_group("overlay")
 	if overlay:
 		overlay.flash()
 
+	# --- Play hit animation and lock control ---
+	if "hit" in anim.sprite_frames.get_animation_names():
+		anim.play("hit")
+	else:
+		print("⚠️ No 'hit' animation found!")
+
+	# disable normal motion during hit
+	set_physics_process(false)
+
+	# --- Small hit freeze (impact pause) ---
+	await get_tree().create_timer(0.05).timeout
+
+	# --- Knockback motion ---
+	var knockback_timer := get_tree().create_timer(knockback_time)
+	while knockback_timer.time_left > 0:
+		position += knockback_dir * knockback_force * get_process_delta_time()
+		await get_tree().process_frame
+
+	# --- Wait until animation finishes if it exists ---
+	if anim.is_playing():
+		await anim.animation_finished
+
+	# re-enable control
+	set_physics_process(true)
+	is_hit_stunned = false
+	velocity = Vector2.ZERO
+
+	# --- Invincibility window ---
 	await get_tree().create_timer(invincibility_time).timeout
 	is_invincible = false
 

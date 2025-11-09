@@ -69,7 +69,7 @@ func _on_attack_area_body_exited(body: Node) -> void:
 
 func attack_player() -> void:
 	if player and player.has_method("take_damage"):
-		player.take_damage(damage)
+		player.take_damage(damage, global_position)
 		can_attack = false
 		cooldown_timer.start(attack_cooldown)
 
