@@ -89,6 +89,29 @@ func _physics_process(delta: float) -> void:
 		$HealthBar.position = Vector2(0, -40)
 
 # ============================================================
+# FACING + ANIMATION
+# ============================================================
+func update_facing(dir: Vector2) -> void:
+	if dir.x != 0:
+		facing_right = dir.x > 0
+	anim.flip_h = not facing_right
+
+func update_animation() -> void:
+	if is_hit_stunned:
+		return
+	if is_attacking:
+		return
+	elif is_dashing:
+		if "dash" in anim.sprite_frames.get_animation_names():
+			anim.play("dash")
+		else:
+			anim.play("run")
+	elif input_dir == Vector2.ZERO:
+		anim.play("idle")
+	else:
+		anim.play("run")
+
+# ============================================================
 # MOVEMENT + INPUT
 # ============================================================
 func handle_movement_input(delta: float) -> void:
@@ -119,27 +142,36 @@ func start_dash() -> void:
 	can_dash = false
 	dash_timer = dash_duration
 	dash_dir = input_dir if input_dir != Vector2.ZERO else (Vector2.RIGHT if facing_right else Vector2.LEFT)
-	spawn_dash_smoke()
 
+	# --- Camera zoom effect ---
 	if cam:
 		var tw = create_tween()
 		tw.tween_property(cam, "zoom", dash_zoom_in, dash_zoom_speed).set_trans(Tween.TRANS_SINE)
 
+	# --- Smoke puff at start ---
+	spawn_dash_smoke()
+
+	# --- White silhouette flash ---
 	var mat := ShaderMaterial.new()
 	var shader := Shader.new()
 	shader.code = """
 		shader_type canvas_item;
 		void fragment() {
-			COLOR = vec4(1.0, 1.0, 1.0, texture(TEXTURE, UV).a);
+			vec4 tex = texture(TEXTURE, UV);
+			COLOR = vec4(1.0, 1.0, 1.0, tex.a);
 		}
 	"""
 	mat.shader = shader
 	anim.material = mat
 
+	# --- Ghost trail timer ---
+	ghost_timer = ghost_spawn_interval
+
 func end_dash() -> void:
 	is_dashing = false
 	dash_cooldown_timer = dash_cooldown
 	anim.material = null
+
 	if cam:
 		var tw = create_tween()
 		tw.tween_property(cam, "zoom", normal_zoom, dash_zoom_speed)
@@ -153,6 +185,31 @@ func handle_dash_timers(delta: float) -> void:
 		dash_cooldown_timer -= delta
 		if dash_cooldown_timer <= 0:
 			can_dash = true
+
+# ============================================================
+# DASH FX 💨
+# ============================================================
+func spawn_dash_smoke() -> void:
+	if dash_smoke_scene == null:
+		return
+	var smoke = dash_smoke_scene.instantiate()
+	get_parent().add_child(smoke)
+	smoke.global_position = global_position + Vector2(0, 8)
+	smoke.flip_h = not facing_right
+
+func spawn_dash_ghost() -> void:
+	if dash_ghost_scene == null:
+		return
+	var ghost = dash_ghost_scene.instantiate()
+	get_parent().add_child(ghost)
+	ghost.global_position = global_position
+	var frame_tex = anim.sprite_frames.get_frame_texture(anim.animation, anim.frame)
+	if frame_tex:
+		ghost.texture = frame_tex
+		ghost.flip_h = anim.flip_h
+	var tw = create_tween()
+	tw.tween_property(ghost, "modulate:a", 0.0, 0.25)
+	tw.tween_callback(Callable(ghost, "queue_free"))
 
 # ============================================================
 # ATTACK SYSTEM ⚔️
@@ -175,6 +232,7 @@ func start_attack() -> void:
 
 	facing_right = dir_to_mouse.x >= 0
 	anim.flip_h = not facing_right
+
 	velocity = Vector2.ZERO
 	attack_freeze_timer = attack_stop_time
 
@@ -227,29 +285,6 @@ func spawn_slash_projectile(direction: Vector2) -> void:
 	slash.damage_multiplier = weapon_damage_upgrade
 
 # ============================================================
-# ANIMATION HANDLING
-# ============================================================
-func update_facing(dir: Vector2) -> void:
-	if dir.x != 0:
-		facing_right = dir.x > 0
-	anim.flip_h = not facing_right
-
-func update_animation() -> void:
-	if is_hit_stunned:
-		return
-	if is_attacking:
-		return
-	elif is_dashing:
-		if "dash" in anim.sprite_frames.get_animation_names():
-			anim.play("dash")
-		else:
-			anim.play("run")
-	elif input_dir == Vector2.ZERO:
-		anim.play("idle")
-	else:
-		anim.play("run")
-
-# ============================================================
 # MOVEMENT FX 💨
 # ============================================================
 func spawn_dust() -> void:
@@ -284,10 +319,6 @@ func take_damage(amount: int, from: Vector2 = Vector2.ZERO) -> void:
 	if current_health <= 0:
 		die()
 
-# ============================================================
-# HIT EFFECTS + KNOCKBACK
-# ============================================================
-
 func play_hit_effects(from: Vector2 = Vector2.ZERO) -> void:
 	if is_invincible or current_health <= 0:
 		return
@@ -297,129 +328,32 @@ func play_hit_effects(from: Vector2 = Vector2.ZERO) -> void:
 	is_attacking = false
 	is_dashing = false
 
-	# --- feedback ---
+	# --- visual feedback ---
 	if cam:
 		cam.shake(6, 0.15)
 	var overlay = get_tree().get_first_node_in_group("overlay")
 	if overlay:
-		overlay.flash(0.6, 0.3)
+		overlay.flash(0.6, 0.2)
 
-	# --- direction ---
-	var knockback_dir = Vector2.ZERO
-	if from != Vector2.ZERO:
-		knockback_dir = (global_position - from).normalized()
-	else:
-		knockback_dir = Vector2.LEFT if facing_right else Vector2.RIGHT
+	# --- instant knockback ---
+	var knockback_dir = (global_position - from).normalized() if from != Vector2.ZERO else (Vector2.LEFT if facing_right else Vector2.RIGHT)
+	move_and_collide(knockback_dir * 200 * get_physics_process_delta_time())
 
-	var knockback_force := 350.0
-	var knockback_time := 0.1
-
-	# --- play hit animation ---
+	# --- play hit animation immediately ---
 	if anim and "hit" in anim.sprite_frames.get_animation_names():
 		anim.play("hit")
-	else:
-		print("⚠️ No 'hit' animation found!")
 
-	# temporarily stop movement so animation isn't overridden
-	set_physics_process(false)
-	velocity = Vector2.ZERO
-
-# --- run knockback while animation plays ---
-	var timer := get_tree().create_timer(knockback_time)
-	while timer.time_left > 0:
-		velocity = knockback_dir * knockback_force
-		move_and_slide()
-		await get_tree().process_frame
-	velocity = Vector2.ZERO
-	set_physics_process(true)
-
-	# --- wait for animation to finish naturally (if exists) ---
-	if anim.animation == "hit" and anim.is_playing():
-		await anim.animation_finished
-
-	# --- reset state ---
-	is_hit_stunned = false
-	velocity = Vector2.ZERO
-
+	# --- invincibility timer ---
 	await get_tree().create_timer(invincibility_time).timeout
+	is_hit_stunned = false
 	is_invincible = false
 
 # ============================================================
-# DEATH SEQUENCE 💀
+# DEATH
 # ============================================================
 func die() -> void:
 	print("💀 Player died")
-
-	velocity = Vector2.ZERO
-	set_physics_process(false)
-	set_process_input(false)
-	get_tree().paused = true
-
-	process_mode = Node.PROCESS_MODE_ALWAYS
-	if anim:
-		anim.process_mode = Node.PROCESS_MODE_ALWAYS
-
-	var dmg_overlay = get_tree().get_first_node_in_group("overlay")
-	var grey_layer = get_tree().get_first_node_in_group("greyscale")
-	var death_overlay = get_tree().get_first_node_in_group("death_overlay")
-
-	for node in [dmg_overlay, grey_layer, death_overlay]:
-		if node:
-			node.process_mode = Node.PROCESS_MODE_ALWAYS
-
-	if dmg_overlay:
-		dmg_overlay.flash(0.6, 0.3)
-
-	if grey_layer:
-		var rect = grey_layer.get_node_or_null("ColorRect")
-		if rect and rect.material:
-			var mat: ShaderMaterial = rect.material
-			var tw := create_tween()
-			tw.tween_method(
-				func(value): mat.set_shader_parameter("intensity", value),
-				0.0, 1.0, 0.4
-			)
-
 	if anim and "death" in anim.sprite_frames.get_animation_names():
 		anim.play("death")
-		await anim.animation_finished
-
-	if death_overlay:
-		await death_overlay.fade_to_black(2.0)
-
-	print("🪦 Death sequence complete.")
-
-# ============================================================
-# DASH FX
-# ============================================================
-func spawn_dash_smoke() -> void:
-	if dash_smoke_scene == null:
-		return
-	var smoke = dash_smoke_scene.instantiate()
-	get_parent().add_child(smoke)
-	var offset_distance = 20.0
-	var y_offset = -10.0
-	var facing_dir = Vector2.RIGHT if facing_right else Vector2.LEFT
-	var offset = -facing_dir * offset_distance + Vector2(0, y_offset)
-	smoke.global_position = global_position + offset
-	smoke.flip_h = not facing_right
-	smoke.rotation = 0.0
-
-func spawn_dash_ghost() -> void:
-	if dash_ghost_scene == null:
-		return
-	var ghost = dash_ghost_scene.instantiate()
-	get_parent().add_child(ghost)
-	var offset_distance = 15.0
-	var facing_dir = Vector2.RIGHT if facing_right else Vector2.LEFT
-	var offset = -facing_dir * offset_distance
-	ghost.global_position = global_position + offset
-	var frame_tex = anim.sprite_frames.get_frame_texture(anim.animation, anim.frame)
-	if frame_tex:
-		ghost.texture = frame_tex
-		ghost.flip_h = anim.flip_h
-		ghost.scale = Vector2(0.3, 0.3)
-		ghost.modulate = Color(0.4, 0.7, 1.0, 0.8)
-	var tw = create_tween()
-	tw.tween_property(ghost, "modulate:a", 0.0, 0.25)
-	tw.tween_callback(Callable(ghost, "queue_free"))
+	await anim.animation_finished
+	queue_free()

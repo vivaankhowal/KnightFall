@@ -1,17 +1,11 @@
 extends CharacterBody2D
 
-# -------------------------------
-# CONFIG
-# -------------------------------
 @export var move_speed: float = 40.0
 @export var damage: int = 10
 @export var max_health: int = 30
 @export var attack_cooldown: float = 1.0
 @export var target_path: NodePath
 
-# -------------------------------
-# STATE
-# -------------------------------
 var current_health: int
 var player: Node = null
 var can_attack: bool = true
@@ -19,71 +13,57 @@ var player_in_range: bool = false
 var is_dead: bool = false
 var has_spawned: bool = false
 
-# -------------------------------
-# NODES
-# -------------------------------
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 @onready var cooldown_timer: Timer = Timer.new()
 @onready var health_bar: ProgressBar = $HealthBar/ProgressBar
 @onready var attack_area: Area2D = $AttackArea
 
-# -------------------------------
-# READY
-# -------------------------------
 func _ready() -> void:
-	# Find player
 	if target_path != NodePath():
-		player = get_node(target_path)
+		player = get_node_or_null(target_path)
 	else:
 		player = get_tree().get_first_node_in_group("player")
 
-	# Setup cooldown timer
+	if player == null:
+		print("⚠️ Enemy: could not find player!")
+
 	cooldown_timer.one_shot = true
 	add_child(cooldown_timer)
 	cooldown_timer.connect("timeout", Callable(self, "_on_cooldown_timeout"))
-
-	# Connect attack signals
 	attack_area.connect("body_entered", Callable(self, "_on_attack_area_body_entered"))
 	attack_area.connect("body_exited", Callable(self, "_on_attack_area_body_exited"))
 
-	# Initialize health
 	current_health = max_health
 	update_health_bar()
 	health_bar.visible = false
 
-	# Play spawn animation if available
+	# --- Fixed spawn handling ---
 	if "spawn" in anim.sprite_frames.get_animation_names():
 		anim.play("spawn")
-		await anim.animation_finished
+		var fallback = get_tree().create_timer(1.5)
+		await anim.animation_finished or fallback.timeout
 	has_spawned = true
+
 	if "walk" in anim.sprite_frames.get_animation_names():
 		anim.play("walk")
 
-# -------------------------------
-# PHYSICS
-# -------------------------------
 func _physics_process(delta: float) -> void:
-	if not has_spawned or is_dead or not player:
+	if is_dead or not player or not has_spawned:
 		return
 
-	# Move toward player only if not attacking
 	if not player_in_range:
-		var direction = (player.global_position - global_position).normalized()
-		velocity = direction * move_speed
+		var dir = (player.global_position - global_position).normalized()
+		velocity = dir * move_speed
 		move_and_slide()
-		anim.flip_h = direction.x < 0
+		anim.flip_h = dir.x < 0
 		if anim.animation != "walk" and "walk" in anim.sprite_frames.get_animation_names():
 			anim.play("walk")
 	else:
 		velocity = Vector2.ZERO
 		move_and_slide()
 
-	# Keep health bar positioned above enemy
 	$HealthBar.position = Vector2(0, -40)
 
-# -------------------------------
-# ATTACK SYSTEM ⚔️
-# -------------------------------
 func _on_attack_area_body_entered(body: Node) -> void:
 	if body.is_in_group("player") and not is_dead:
 		player_in_range = true
@@ -102,10 +82,14 @@ func attack_player() -> void:
 
 	if "attack" in anim.sprite_frames.get_animation_names():
 		anim.play("attack")
+		# Deal damage halfway through the attack
+		await get_tree().create_timer(0.3).timeout
+		if player and player.has_method("take_damage"):
+			player.take_damage(damage, global_position)
 		await anim.animation_finished
-
-	if player and player.has_method("take_damage"):
-		player.take_damage(damage, global_position)
+	else:
+		if player and player.has_method("take_damage"):
+			player.take_damage(damage, global_position)
 
 	cooldown_timer.start(attack_cooldown)
 
@@ -114,13 +98,9 @@ func _on_cooldown_timeout() -> void:
 	if player_in_range:
 		attack_player()
 
-# -------------------------------
-# HEALTH SYSTEM ❤️
-# -------------------------------
 func take_damage(amount: int) -> void:
 	if is_dead:
 		return
-
 	current_health -= amount
 	current_health = clamp(current_health, 0, max_health)
 	update_health_bar()
