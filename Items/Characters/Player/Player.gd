@@ -38,6 +38,15 @@ var ghost_timer: float = 0.0
 var locked_attack_dir: Vector2 = Vector2.ZERO
 var is_hit_stunned: bool = false
 
+# --- Knockback ---
+var knockback_velocity: Vector2 = Vector2.ZERO
+var knockback_friction: float = 1800.0
+var is_knockback: bool = false
+
+# --- Invincibility ---
+var is_invincible: bool = false
+@export var invincibility_time: float = 0.6
+
 # --- Dash State ---
 var is_dashing: bool = false
 var can_dash: bool = true
@@ -56,10 +65,10 @@ var dash_dir: Vector2 = Vector2.ZERO
 # READY
 # ============================================================
 func _ready() -> void:
-	anim.connect("frame_changed", Callable(self, "_on_frame_changed"))
+	anim.frame_changed.connect(_on_frame_changed)
 	add_child(attack_timer)
 	attack_timer.one_shot = true
-	attack_timer.connect("timeout", Callable(self, "_on_attack_timer_timeout"))
+	attack_timer.timeout.connect(_on_attack_timer_timeout)
 	current_health = max_health
 	update_health_bar()
 
@@ -69,27 +78,43 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	handle_dash_timers(delta)
 
+	# PRIORITY 1 — DASH
 	if is_dashing:
 		velocity = dash_dir * dash_speed
 		move_and_slide()
+
 		ghost_timer -= delta
 		if ghost_timer <= 0:
 			spawn_dash_ghost()
 			ghost_timer = ghost_spawn_interval
 		return
 
+	# PRIORITY 2 — KNOCKBACK
+	if is_knockback:
+		velocity = knockback_velocity
+		knockback_velocity = knockback_velocity.move_toward(Vector2.ZERO, knockback_friction * delta)
+
+		move_and_slide()
+
+		if knockback_velocity.length() < 5:
+			is_knockback = false
+		return
+
+	# PRIORITY 3 — ATTACK FREEZE
 	if attack_freeze_timer > 0.0:
 		attack_freeze_timer -= delta
 		move_and_slide()
-	else:
-		handle_movement_input(delta)
-		move_and_slide()
+		return
+
+	# PRIORITY 4 — NORMAL MOVEMENT
+	handle_movement_input(delta)
+	move_and_slide()
 
 	if health_bar:
 		$HealthBar.position = Vector2(0, -40)
 
 # ============================================================
-# FACING + ANIMATION
+# ANIMATION + FACING
 # ============================================================
 func update_facing(dir: Vector2) -> void:
 	if dir.x != 0:
@@ -97,25 +122,22 @@ func update_facing(dir: Vector2) -> void:
 	anim.flip_h = not facing_right
 
 func update_animation() -> void:
-	if is_hit_stunned:
+	if is_hit_stunned or is_knockback:
 		return
 	if is_attacking:
 		return
-	elif is_dashing:
-		if "dash" in anim.sprite_frames.get_animation_names():
-			anim.play("dash")
-		else:
-			anim.play("run")
+	if is_dashing:
+		anim.play("dash")
 	elif input_dir == Vector2.ZERO:
 		anim.play("idle")
 	else:
 		anim.play("run")
 
 # ============================================================
-# MOVEMENT + INPUT
+# MOVEMENT INPUT
 # ============================================================
 func handle_movement_input(delta: float) -> void:
-	if not is_attacking:
+	if not is_attacking and not is_hit_stunned:
 		input_dir = Vector2(
 			Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
 			Input.get_action_strength("move_down") - Input.get_action_strength("move_up")
@@ -131,7 +153,7 @@ func handle_movement_input(delta: float) -> void:
 	update_animation()
 
 # ============================================================
-# DASH SYSTEM ⚡
+# DASH SYSTEM
 # ============================================================
 func handle_dash_input() -> void:
 	if Input.is_action_just_pressed("dash") and can_dash and not is_attacking:
@@ -143,15 +165,15 @@ func start_dash() -> void:
 	dash_timer = dash_duration
 	dash_dir = input_dir if input_dir != Vector2.ZERO else (Vector2.RIGHT if facing_right else Vector2.LEFT)
 
-	# --- Camera zoom effect ---
+	# Camera zoom
 	if cam:
 		var tw = create_tween()
-		tw.tween_property(cam, "zoom", dash_zoom_in, dash_zoom_speed).set_trans(Tween.TRANS_SINE)
+		tw.tween_property(cam, "zoom", dash_zoom_in, dash_zoom_speed)
 
-	# --- Smoke puff at start ---
+	# Smoke puff FX
 	spawn_dash_smoke()
 
-	# --- White silhouette flash ---
+	# White silhouette flash
 	var mat := ShaderMaterial.new()
 	var shader := Shader.new()
 	shader.code = """
@@ -164,7 +186,6 @@ func start_dash() -> void:
 	mat.shader = shader
 	anim.material = mat
 
-	# --- Ghost trail timer ---
 	ghost_timer = ghost_spawn_interval
 
 func end_dash() -> void:
@@ -187,14 +208,18 @@ func handle_dash_timers(delta: float) -> void:
 			can_dash = true
 
 # ============================================================
-# DASH FX 💨
+# DASH FX
 # ============================================================
 func spawn_dash_smoke() -> void:
 	if dash_smoke_scene == null:
 		return
 	var smoke = dash_smoke_scene.instantiate()
 	get_parent().add_child(smoke)
-	smoke.global_position = global_position + Vector2(0, 8)
+
+	var offset_distance := -10.0
+	var y_offset := -10.0
+	var facing_dir = Vector2.RIGHT if facing_right else Vector2.LEFT
+	smoke.global_position = global_position + facing_dir * offset_distance + Vector2(0, y_offset)
 	smoke.flip_h = not facing_right
 
 func spawn_dash_ghost() -> void:
@@ -212,7 +237,7 @@ func spawn_dash_ghost() -> void:
 	tw.tween_callback(Callable(ghost, "queue_free"))
 
 # ============================================================
-# ATTACK SYSTEM ⚔️
+# ATTACK SYSTEM
 # ============================================================
 func handle_attack_input(delta: float) -> void:
 	if attack_locked or is_dashing:
@@ -252,9 +277,6 @@ func _on_attack_timer_timeout() -> void:
 	current_attack = ""
 	attack_hit_triggered = false
 
-# ============================================================
-# ATTACK EVENTS
-# ============================================================
 func _on_frame_changed() -> void:
 	if anim.animation == "horizontal_slash" and anim.frame == 4:
 		trigger_attack_hit()
@@ -285,24 +307,21 @@ func spawn_slash_projectile(direction: Vector2) -> void:
 	slash.damage_multiplier = weapon_damage_upgrade
 
 # ============================================================
-# MOVEMENT FX 💨
+# FX — Dust
 # ============================================================
 func spawn_dust() -> void:
 	if dust_scene == null:
 		return
 	var dust = dust_scene.instantiate()
 	get_parent().add_child(dust)
-	var offset_distance = 10.0
+	var offset_distance = 5.0
 	var offset_dir = Vector2.LEFT if facing_right else Vector2.RIGHT
 	dust.global_position = global_position + offset_dir * offset_distance + Vector2(0, 8)
 	dust.flip_h = not facing_right
 
 # ============================================================
-# HEALTH SYSTEM ❤️
+# HEALTH SYSTEM + KNOCKBACK
 # ============================================================
-var is_invincible: bool = false
-@export var invincibility_time: float = 0.6
-
 func update_health_bar() -> void:
 	if health_bar:
 		health_bar.value = current_health
@@ -314,12 +333,13 @@ func take_damage(amount: int, from: Vector2 = Vector2.ZERO) -> void:
 	current_health -= amount
 	current_health = clamp(current_health, 0, max_health)
 	update_health_bar()
+
 	play_hit_effects(from)
 
 	if current_health <= 0:
 		die()
 
-func play_hit_effects(from: Vector2 = Vector2.ZERO) -> void:
+func play_hit_effects(from: Vector2 = Vector2.ZERO):
 	if is_invincible or current_health <= 0:
 		return
 
@@ -328,22 +348,22 @@ func play_hit_effects(from: Vector2 = Vector2.ZERO) -> void:
 	is_attacking = false
 	is_dashing = false
 
-	# --- visual feedback ---
 	if cam:
 		cam.shake(6, 0.15)
 	var overlay = get_tree().get_first_node_in_group("overlay")
 	if overlay:
-		overlay.flash(0.6, 0.2)
+		overlay.flash(0.6, 0.25)
 
-	# --- instant knockback ---
-	var knockback_dir = (global_position - from).normalized() if from != Vector2.ZERO else (Vector2.LEFT if facing_right else Vector2.RIGHT)
-	move_and_collide(knockback_dir * 200 * get_physics_process_delta_time())
+	var dir = (global_position - from).normalized()
+	dir.y -= 0.1
+	dir = dir.normalized()
 
-	# --- play hit animation immediately ---
-	if anim and "hit" in anim.sprite_frames.get_animation_names():
+	knockback_velocity = dir * 550
+	is_knockback = true
+
+	if "hit" in anim.sprite_frames.get_animation_names():
 		anim.play("hit")
 
-	# --- invincibility timer ---
 	await get_tree().create_timer(invincibility_time).timeout
 	is_hit_stunned = false
 	is_invincible = false
@@ -353,7 +373,7 @@ func play_hit_effects(from: Vector2 = Vector2.ZERO) -> void:
 # ============================================================
 func die() -> void:
 	print("💀 Player died")
-	if anim and "death" in anim.sprite_frames.get_animation_names():
+	if "death" in anim.sprite_frames.get_animation_names():
 		anim.play("death")
 	await anim.animation_finished
 	queue_free()

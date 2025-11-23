@@ -326,7 +326,7 @@ size = Vector2(20, 26)
 
 [node name="Player" type="CharacterBody2D" groups=["freezeable", "player"]]
 collision_layer = 2
-collision_mask = 5
+collision_mask = 9
 script = ExtResource("1_es1fo")
 slash_scene = ExtResource("3_c14pu")
 dust_scene = ExtResource("3_jgglj")
