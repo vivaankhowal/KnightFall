@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dlsld6pgqdeni"
-path="res://.godot/imported/base shopkeepers.png-04ee992e6546815e1251423d8f6cd991.ctex"
+uid="uid://b8klqhd1m6t8m"
+path="res://.godot/imported/sprite-1-26.png-cc072fac4c1795e14b4bc94c8f3b805d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://base shopkeepers.png"
-dest_files=["res://.godot/imported/base shopkeepers.png-04ee992e6546815e1251423d8f6cd991.ctex"]
+source_file="res://Items/Enemies/Enemy HealthBar/sprite-1-26.png"
+dest_files=["res://.godot/imported/sprite-1-26.png-cc072fac4c1795e14b4bc94c8f3b805d.ctex"]
 
 [params]
 

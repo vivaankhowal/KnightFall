@@ -75,6 +75,7 @@ func _ready() -> void:
 # ============================================================
 # MAIN LOOP
 # ============================================================
+
 func _physics_process(delta: float) -> void:
 	handle_dash_timers(delta)
 
@@ -127,7 +128,7 @@ func update_animation() -> void:
 	if is_attacking:
 		return
 	if is_dashing:
-		anim.play("dash")
+		return
 	elif input_dir == Vector2.ZERO:
 		anim.play("idle")
 	else:
@@ -137,7 +138,8 @@ func update_animation() -> void:
 # MOVEMENT INPUT
 # ============================================================
 func handle_movement_input(delta: float) -> void:
-	if not is_attacking and not is_hit_stunned:
+# Player ALWAYS moves unless stunned or knocked back
+	if not is_hit_stunned and not is_knockback:
 		input_dir = Vector2(
 			Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
 			Input.get_action_strength("move_down") - Input.get_action_strength("move_up")

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dlsld6pgqdeni"
-path="res://.godot/imported/base shopkeepers.png-04ee992e6546815e1251423d8f6cd991.ctex"
+uid="uid://sea7yipdyk68"
+path="res://.godot/imported/dusttrail.png-d68dca09eb58774923224bf65062104d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://base shopkeepers.png"
-dest_files=["res://.godot/imported/base shopkeepers.png-04ee992e6546815e1251423d8f6cd991.ctex"]
+source_file="res://Items/Characters/Player/dust/dusttrail.png"
+dest_files=["res://.godot/imported/dusttrail.png-d68dca09eb58774923224bf65062104d.ctex"]
 
 [params]
 

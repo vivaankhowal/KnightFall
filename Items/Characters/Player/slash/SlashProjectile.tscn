@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://dy1xansjxvhrs" path="res://Items/Characters/Player/slash/SlashEffect.png" id="2_02q3a"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uqwxd"]
-size = Vector2(404, 101)
+size = Vector2(320, 80)
 
 [node name="SlashProjectile" type="Area2D"]
 scale = Vector2(0.15, 0.3)
@@ -16,5 +16,5 @@ script = ExtResource("1_jlsnl")
 texture = ExtResource("2_02q3a")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(9, -7.5)
+position = Vector2(26.666664, 0)
 shape = SubResource("RectangleShape2D_uqwxd")

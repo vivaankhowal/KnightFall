@@ -326,7 +326,6 @@ size = Vector2(20, 26)
 
 [node name="Player" type="CharacterBody2D" groups=["freezeable", "player"]]
 collision_layer = 2
-collision_mask = 9
 script = ExtResource("1_es1fo")
 slash_scene = ExtResource("3_c14pu")
 dust_scene = ExtResource("3_jgglj")
@@ -345,10 +344,6 @@ animation = &"hit"
 position = Vector2(3, -6)
 shape = SubResource("RectangleShape2D_xgqey")
 
-[node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(4, 4)
-script = ExtResource("100_f2hkb")
-
 [node name="SlashSpawn" type="Marker2D" parent="."]
 position = Vector2(3.333332, -1.6666666)
 
@@ -363,3 +358,9 @@ offset_bottom = -109.333336
 theme_override_colors/font_color = Color(0, 0.9490196, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 1, 0, 1)
 show_percentage = false
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(4, 4)
+position_smoothing_enabled = true
+position_smoothing_speed = 10.0
+script = ExtResource("100_f2hkb")

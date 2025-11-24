@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dlsld6pgqdeni"
-path="res://.godot/imported/base shopkeepers.png-04ee992e6546815e1251423d8f6cd991.ctex"
+uid="uid://cwuq5tq0t58ud"
+path="res://.godot/imported/spawn.png-51371f89c39944b303fcd17a7d7c84ce.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://base shopkeepers.png"
-dest_files=["res://.godot/imported/base shopkeepers.png-04ee992e6546815e1251423d8f6cd991.ctex"]
+source_file="res://Items/Enemies/Chomper/spawn/spawn.png"
+dest_files=["res://.godot/imported/spawn.png-51371f89c39944b303fcd17a7d7c84ce.ctex"]
 
 [params]
 

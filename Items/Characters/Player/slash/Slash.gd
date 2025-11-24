@@ -14,6 +14,7 @@ extends Area2D
 # -------------------------------
 var direction: Vector2 = Vector2.ZERO
 var timer: float = 0.0
+var already_hit = []
 
 # -------------------------------
 # READY
@@ -34,8 +35,11 @@ func _physics_process(delta: float) -> void:
 # -------------------------------
 # COLLISION
 # -------------------------------
-func _on_body_entered(body: Node) -> void:
-	_handle_hit(body)
+func _on_body_entered(body):
+	if body.is_in_group("enemy") and body not in already_hit:
+		already_hit.append(body)
+		body.take_damage(base_damage * damage_multiplier, global_position)
+
 
 func _on_area_entered(area: Node) -> void:
 	_handle_hit(area)

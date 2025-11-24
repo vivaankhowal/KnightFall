@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://0q42nkd0v1c2" path="res://KnightFall Assets/TileSets/atlas_floor-16x16.png" id="1_x3qh4"]
 [ext_resource type="Texture2D" uid="uid://c5qa4q21vf4rc" path="res://KnightFall Assets/TileSets/atlas_walls_high-16x32.png" id="2_1y7hs"]
+[ext_resource type="PackedScene" uid="uid://bv7mcbtqpuee" path="res://Items/Characters/Player/Player.tscn" id="2_npq0p"]
 [ext_resource type="Texture2D" uid="uid://3uw1dic3fajq" path="res://KnightFall Assets/TileSets/atlas_walls_low-16x16.png" id="3_0adf1"]
 [ext_resource type="Texture2D" uid="uid://12p3orfm2oje" path="res://KnightFall Assets/TileSets/Smooth Dungeon Tileset.png" id="4_q0h7r"]
 [ext_resource type="Texture2D" uid="uid://2of0865cn22k" path="res://KnightFall Assets/TileSets/Carpets.png" id="5_0adf1"]
@@ -9,8 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://gkyxsqanw5lw" path="res://KnightFall Assets/TileSets/pedestals.png" id="6_0adf1"]
 [ext_resource type="Texture2D" uid="uid://ycor7fo7qprw" path="res://KnightFall Assets/TileSets/supplies_objects.png" id="7_8g0e2"]
 [ext_resource type="Texture2D" uid="uid://c61cpp3vkeee1" path="res://Items/Characters/Armorer/armor shop.png" id="9_rnjb2"]
-[ext_resource type="PackedScene" uid="uid://dy8h8pxa28i07" path="res://DamageOverlay.tscn" id="13_2w4de"]
-[ext_resource type="PackedScene" uid="uid://nxojlrbrypef" path="res://Enemy.tscn" id="13_otngv"]
+[ext_resource type="PackedScene" uid="uid://dy8h8pxa28i07" path="res://Items/Characters/Player/hit/DamageOverlay.tscn" id="13_2w4de"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_npq0p"]
 texture = ExtResource("1_x3qh4")
@@ -2459,5 +2459,5 @@ layer_0/tile_data = PackedInt32Array(-65530, 524288, 1, 6, 524288, 2, 65542, 524
 
 [node name="DamageOverlay" parent="." instance=ExtResource("13_2w4de")]
 
-[node name="Enemy" parent="." instance=ExtResource("13_otngv")]
-position = Vector2(299, 576)
+[node name="Player" parent="." instance=ExtResource("2_npq0p")]
+position = Vector2(312, 621)
