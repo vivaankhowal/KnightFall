@@ -284,7 +284,7 @@ script = ExtResource("1_5pru2")
 texture_filter = 1
 material = SubResource("ShaderMaterial_6do27")
 sprite_frames = SubResource("SpriteFrames_j4qr3")
-animation = &"death"
+animation = &"walk"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-0.5, 4.5)

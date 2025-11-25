@@ -1,4 +1,4 @@
-[gd_scene load_steps=78 format=3 uid="uid://bv7mcbtqpuee"]
+[gd_scene load_steps=79 format=3 uid="uid://bv7mcbtqpuee"]
 
 [ext_resource type="Script" uid="uid://cfg1irk0mn7ga" path="res://Items/Characters/Player/Player.gd" id="1_es1fo"]
 [ext_resource type="Texture2D" uid="uid://bhxwthhmfuqxw" path="res://Items/Characters/Player/death/sprite-3-2.png" id="2_8q3pd"]
@@ -59,6 +59,7 @@
 [ext_resource type="Texture2D" uid="uid://c5gnh1w8n3nol" path="res://Items/Characters/Player/idle/sprite-16-13.png" id="29_dsfuw"]
 [ext_resource type="Texture2D" uid="uid://bbwdp7ys3wqb1" path="res://Items/Characters/Player/idle/sprite-19-1.png" id="30_osjv5"]
 [ext_resource type="Texture2D" uid="uid://jdeexwjupx00" path="res://Items/Characters/Player/idle/sprite-19-4.png" id="31_bbwwh"]
+[ext_resource type="SpriteFrames" uid="uid://nrs6730yn8fw" path="res://healthbar_frames.tres" id="76_w6ef4"]
 [ext_resource type="Texture2D" uid="uid://f1wb42f6yaxi" path="res://Items/Characters/Player/run/1.png" id="79_ilgj2"]
 [ext_resource type="Texture2D" uid="uid://byo15kdyv8rc1" path="res://Items/Characters/Player/run/2.png" id="80_ijmar"]
 [ext_resource type="Texture2D" uid="uid://cwlvv14p6e2rc" path="res://Items/Characters/Player/run/3.png" id="81_rwn2q"]
@@ -348,20 +349,21 @@ shape = SubResource("RectangleShape2D_xgqey")
 [node name="SlashSpawn" type="Marker2D" parent="."]
 position = Vector2(3.333332, -1.6666666)
 
-[node name="HealthBar" type="Node2D" parent="."]
-position = Vector2(1, -39)
-
-[node name="ProgressBar" type="ProgressBar" parent="HealthBar"]
-offset_left = -30.0
-offset_top = -146.0
-offset_right = 65.0
-offset_bottom = -109.333336
-theme_override_colors/font_color = Color(0, 0.9490196, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 1, 0, 1)
-show_percentage = false
-
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(4, 4)
 position_smoothing_enabled = true
 position_smoothing_speed = 10.0
 script = ExtResource("100_f2hkb")
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="HealthBar" type="Control" parent="HUD"]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="HUD/HealthBar"]
+position = Vector2(31, 19)
+scale = Vector2(0.5, 0.5)
+sprite_frames = ExtResource("76_w6ef4")
+centered = false
+offset = Vector2(20, 20)

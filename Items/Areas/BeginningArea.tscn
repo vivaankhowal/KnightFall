@@ -2467,11 +2467,11 @@ position = Vector2(312, 621)
 [node name="Chomper" parent="." instance=ExtResource("12_twiir")]
 position = Vector2(401, 617)
 
+[node name="BigTeeth3" parent="." instance=ExtResource("13_otngv")]
+position = Vector2(112, 579)
+
+[node name="BigTeeth2" parent="." instance=ExtResource("13_otngv")]
+position = Vector2(31, 639)
+
 [node name="BigTeeth" parent="." instance=ExtResource("13_otngv")]
 position = Vector2(32, 553)
-
-[node name="BigTeeth" parent="BigTeeth" instance=ExtResource("13_otngv")]
-position = Vector2(-1, 86)
-
-[node name="BigTeeth" parent="BigTeeth/BigTeeth" instance=ExtResource("13_otngv")]
-position = Vector2(81, -60)

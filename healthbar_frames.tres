@@ -1,0 +1,54 @@
+[gd_resource type="SpriteFrames" load_steps=12 format=3 uid="uid://nrs6730yn8fw"]
+
+[ext_resource type="Texture2D" uid="uid://cvhf0jdwy8oen" path="res://healthbars/healthbars00.png" id="1_vik7m"]
+[ext_resource type="Texture2D" uid="uid://bilhmkef4ngm8" path="res://healthbars/healthbars01.png" id="2_f665n"]
+[ext_resource type="Texture2D" uid="uid://ddhuledn4ao41" path="res://healthbars/healthbars02.png" id="3_x55ou"]
+[ext_resource type="Texture2D" uid="uid://b87eyx5gioq2a" path="res://healthbars/healthbars03.png" id="4_8yrrv"]
+[ext_resource type="Texture2D" uid="uid://ctw7alc4djilg" path="res://healthbars/healthbars04.png" id="5_b3wmo"]
+[ext_resource type="Texture2D" uid="uid://bl2iqm85w6qlt" path="res://healthbars/healthbars05.png" id="6_ayota"]
+[ext_resource type="Texture2D" uid="uid://c326cq0rt1n6p" path="res://healthbars/healthbars06.png" id="7_nx56q"]
+[ext_resource type="Texture2D" uid="uid://dxxnjjcf1blms" path="res://healthbars/healthbars07.png" id="8_y8x2s"]
+[ext_resource type="Texture2D" uid="uid://5agb6vkjpqxu" path="res://healthbars/healthbars08.png" id="9_lniwe"]
+[ext_resource type="Texture2D" uid="uid://l8s5ccnw22k8" path="res://healthbars/healthbars09.png" id="10_4w1i7"]
+[ext_resource type="Texture2D" uid="uid://b2x7a081pi13k" path="res://healthbars/healthbars10.png" id="11_ltpo4"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("11_ltpo4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_4w1i7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_lniwe")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_y8x2s")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_nx56q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_ayota")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_b3wmo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_8yrrv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_x55ou")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_f665n")
+}, {
+"duration": 1.0,
+"texture": ExtResource("1_vik7m")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]

@@ -59,7 +59,7 @@ var dash_dir: Vector2 = Vector2.ZERO
 # ============================================================
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 @onready var attack_timer: Timer = Timer.new()
-@onready var health_bar: ProgressBar = $HealthBar/ProgressBar
+@onready var health_bar: AnimatedSprite2D = $HUD/HealthBar/AnimatedSprite2D
 @onready var flash_mat := ShaderMaterial.new()
 
 # ============================================================
@@ -74,7 +74,6 @@ func _ready() -> void:
 	update_health_bar()
 	var shader := load("res://red_flash.gdshader")
 	flash_mat.shader = shader
-
 
 # ============================================================
 # MAIN LOOP
@@ -114,9 +113,6 @@ func _physics_process(delta: float) -> void:
 	# PRIORITY 4 — NORMAL MOVEMENT
 	handle_movement_input(delta)
 	move_and_slide()
-
-	if health_bar:
-		$HealthBar.position = Vector2(0, -40)
 
 # ============================================================
 # ANIMATION + FACING
@@ -331,9 +327,11 @@ func spawn_dust() -> void:
 # ============================================================
 # HEALTH SYSTEM + KNOCKBACK
 # ============================================================
-func update_health_bar() -> void:
-	if health_bar:
-		health_bar.value = current_health
+func update_health_bar():
+	var percent := float(current_health) / float(max_health)
+	var frame := int(round(percent * 10))   # 11 frames: 0 to 10
+	frame = clamp(frame, 0, 10)
+	health_bar.frame = frame
 
 func take_damage(amount: int, from: Vector2 = Vector2.ZERO) -> void:
 	if is_dashing or is_invincible:
