@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c866yjxbwfy12"
-path="res://.godot/imported/walk.png-001ea9c63de165edbd8c517115ef3343.ctex"
+uid="uid://b2wuldt6nasiv"
+path="res://.godot/imported/sprite_2.png-694eb3026920fd9f0ad9ce502ed36a2a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Items/Enemies/Chomper/walk/walk.png"
-dest_files=["res://.godot/imported/walk.png-001ea9c63de165edbd8c517115ef3343.ctex"]
+source_file="res://Items/Enemies/Chomper/walk/walk/sprite_2.png"
+dest_files=["res://.godot/imported/sprite_2.png-694eb3026920fd9f0ad9ce502ed36a2a.ctex"]
 
 [params]
 

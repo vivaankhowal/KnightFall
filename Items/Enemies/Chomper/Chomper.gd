@@ -67,14 +67,14 @@ func _ready():
 
 	# --- PLAY SPAWN ANIMATION IF AVAILABLE ---
 	if "spawn" in anim.sprite_frames.get_animation_names():
-		play_scaled_animation("spawn", 0.23)
+		play_scaled_animation("spawn", 0.3)
 		await anim.animation_finished
 	# after spawn animation finishes:
 	spawning = false
 
 	# --- Idle/Walk default ---
 	if "walk" in anim.sprite_frames.get_animation_names():
-		anim.play("walk")
+		play_scaled_animation("walk", 0.3)
 
 	print("✅ Enemy ready")
 
@@ -136,7 +136,7 @@ func attack_player() -> void:
 	if player and player.has_method("take_damage"):
 		player.take_damage(damage, global_position)
 		await anim.animation_finished
-		anim.play("walk")
+		play_scaled_animation("walk", 0.3)
 
 	# start cooldown
 	cooldown_timer.start(attack_cooldown)
@@ -200,7 +200,7 @@ func take_damage(amount: int, from: Vector2 = Vector2.ZERO) -> void:
 		return
 
 	if "walk" in anim.sprite_frames.get_animation_names():
-		anim.play("walk")
+		play_scaled_animation("walk", 0.3)
 
 
 
@@ -214,7 +214,7 @@ func die() -> void:
 
 	# death animation
 	if "death" in anim.sprite_frames.get_animation_names():
-		play_scaled_animation("death", 0.15)
+		play_scaled_animation("death", 0.1)
 		await anim.animation_finished
 
 	queue_free()

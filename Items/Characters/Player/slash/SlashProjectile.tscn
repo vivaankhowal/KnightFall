@@ -1,20 +1,22 @@
-[gd_scene load_steps=4 format=3 uid="uid://dm5mt27mr32lr"]
+[gd_scene load_steps=5 format=3 uid="uid://dm5mt27mr32lr"]
 
 [ext_resource type="Script" uid="uid://dexkl0vwgjr8s" path="res://Items/Characters/Player/slash/Slash.gd" id="1_jlsnl"]
 [ext_resource type="Texture2D" uid="uid://dy1xansjxvhrs" path="res://Items/Characters/Player/slash/SlashEffect.png" id="2_02q3a"]
+[ext_resource type="PackedScene" uid="uid://dyvdva7e8553e" path="res://HitSpark.tscn" id="2_thf88"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uqwxd"]
-size = Vector2(320, 80)
+size = Vector2(432, 95)
 
 [node name="SlashProjectile" type="Area2D"]
-scale = Vector2(0.15, 0.3)
+scale = Vector2(0.2, 0.35)
 collision_layer = 8
 collision_mask = 4
 script = ExtResource("1_jlsnl")
+hit_effect_scene = ExtResource("2_thf88")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_02q3a")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(26.666664, 0)
+position = Vector2(4.7683716e-07, 0)
 shape = SubResource("RectangleShape2D_uqwxd")

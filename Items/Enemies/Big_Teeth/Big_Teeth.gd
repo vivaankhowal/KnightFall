@@ -3,9 +3,9 @@ extends CharacterBody2D
 # ==========================
 # ---  ENEMY STATS
 # ==========================
-@export var move_speed: float = 20.0
+@export var move_speed: float = 40.0
 @export var damage: int = 10
-@export var max_health: int = 110
+@export var max_health: int = 30
 @export var attack_cooldown: float = 1.0
 @export var target_path: NodePath
 
@@ -214,7 +214,7 @@ func die() -> void:
 
 	# death animation
 	if "death" in anim.sprite_frames.get_animation_names():
-		play_scaled_animation("death", 0.15)
+		play_scaled_animation("death", 0.1)
 		await anim.animation_finished
 
 	queue_free()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=54 format=3 uid="uid://nxojlrbrypef"]
+[gd_scene load_steps=58 format=3 uid="uid://nxojlrbrypef"]
 
 [ext_resource type="Script" uid="uid://bnkmtp8pah72i" path="res://Items/Enemies/Big_Teeth/Big_Teeth.gd" id="1_tjmy8"]
 [ext_resource type="Shader" uid="uid://cbxct24ys224x" path="res://flash_shader.gdshader" id="2_1spus"]
@@ -39,47 +39,63 @@ region = Rect2(0, 0, 50, 36)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vlxdj"]
 atlas = ExtResource("4_1spus")
-region = Rect2(0, 0, 512, 512)
+region = Rect2(768, 0, 768, 768)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lopil"]
 atlas = ExtResource("4_1spus")
-region = Rect2(512, 0, 512, 512)
+region = Rect2(1536, 0, 768, 768)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_srfad"]
 atlas = ExtResource("4_1spus")
-region = Rect2(1024, 0, 512, 512)
+region = Rect2(2304, 0, 768, 768)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_h7nhi"]
 atlas = ExtResource("4_1spus")
-region = Rect2(0, 512, 512, 512)
+region = Rect2(0, 768, 768, 768)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pxow3"]
 atlas = ExtResource("4_1spus")
-region = Rect2(512, 512, 512, 512)
+region = Rect2(768, 768, 768, 768)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wydot"]
 atlas = ExtResource("4_1spus")
-region = Rect2(1024, 512, 512, 512)
+region = Rect2(1536, 768, 768, 768)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_to1q7"]
 atlas = ExtResource("4_1spus")
-region = Rect2(0, 1024, 512, 512)
+region = Rect2(2304, 768, 768, 768)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mgfe7"]
 atlas = ExtResource("4_1spus")
-region = Rect2(512, 1024, 512, 512)
+region = Rect2(0, 1536, 768, 768)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3h715"]
 atlas = ExtResource("4_1spus")
-region = Rect2(1024, 1024, 512, 512)
+region = Rect2(768, 1536, 768, 768)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_x8e0a"]
 atlas = ExtResource("4_1spus")
-region = Rect2(0, 1536, 512, 512)
+region = Rect2(1536, 1536, 768, 768)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_uffmi"]
 atlas = ExtResource("4_1spus")
-region = Rect2(512, 1536, 512, 512)
+region = Rect2(2304, 1536, 768, 768)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2ldrq"]
+atlas = ExtResource("4_1spus")
+region = Rect2(0, 2304, 768, 768)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lj6qm"]
+atlas = ExtResource("4_1spus")
+region = Rect2(768, 2304, 768, 768)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_quyef"]
+atlas = ExtResource("4_1spus")
+region = Rect2(1536, 2304, 768, 768)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tlpdn"]
+atlas = ExtResource("4_1spus")
+region = Rect2(2304, 2304, 768, 768)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1spus"]
 atlas = ExtResource("4_vjit0")
@@ -204,9 +220,6 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": null
-}, {
-"duration": 1.0,
 "texture": SubResource("AtlasTexture_vlxdj")
 }, {
 "duration": 1.0,
@@ -238,6 +251,18 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_uffmi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2ldrq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lj6qm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_quyef")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tlpdn")
 }],
 "loop": false,
 "name": &"death",
@@ -342,8 +367,8 @@ script = ExtResource("1_tjmy8")
 texture_filter = 1
 material = SubResource("ShaderMaterial_6do27")
 sprite_frames = SubResource("SpriteFrames_j4qr3")
-animation = &"spawn"
-frame = 15
+animation = &"death"
+frame = 14
 frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

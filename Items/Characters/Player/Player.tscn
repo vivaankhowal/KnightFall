@@ -8,11 +8,11 @@
 [ext_resource type="Texture2D" uid="uid://dkjef11b8i80r" path="res://Items/Characters/Player/death/sprite-3-4.png" id="3_o5wjy"]
 [ext_resource type="Texture2D" uid="uid://hixrtyfnjce5" path="res://Items/Characters/Player/idle/sprite-1-1.png" id="3_vtvfp"]
 [ext_resource type="Texture2D" uid="uid://cbcsx4yi7necb" path="res://Items/Characters/Player/hit/sprite-3-5.png" id="4_fxftb"]
-[ext_resource type="PackedScene" uid="uid://14cicb8sgdfb" path="res://smoke_puff.tscn" id="4_gpqdx"]
+[ext_resource type="PackedScene" uid="uid://14cicb8sgdfb" path="res://Items/Characters/Player/dash/smoke_puff.tscn" id="4_gpqdx"]
 [ext_resource type="Texture2D" uid="uid://dsebaqg0370e0" path="res://Items/Characters/Player/charged slash/sprite-11-16.png" id="4_i5e2k"]
 [ext_resource type="Texture2D" uid="uid://b8xuknjnkpvm7" path="res://Items/Characters/Player/idle/sprite-1-4.png" id="4_ypuv8"]
 [ext_resource type="Texture2D" uid="uid://b8v78el6po3va" path="res://Items/Characters/Player/idle/sprite-1-13.png" id="5_4ljpd"]
-[ext_resource type="PackedScene" uid="uid://cygicneinbjkt" path="res://DashGhost.tscn" id="5_7bl4c"]
+[ext_resource type="PackedScene" uid="uid://cygicneinbjkt" path="res://Items/Characters/Player/dash/DashGhost.tscn" id="5_7bl4c"]
 [ext_resource type="Texture2D" uid="uid://d1su05cvpv4t2" path="res://Items/Characters/Player/death/sprite-3-8.png" id="5_65oh5"]
 [ext_resource type="Texture2D" uid="uid://b0b14fvveks87" path="res://Items/Characters/Player/charged slash/sprite-11-20.png" id="5_67g2j"]
 [ext_resource type="Texture2D" uid="uid://d2u0ydjyae8t3" path="res://Items/Characters/Player/idle/sprite-1-7.png" id="5_toq76"]
@@ -325,6 +325,7 @@ animations = [{
 size = Vector2(20, 26)
 
 [node name="Player" type="CharacterBody2D" groups=["freezeable", "player"]]
+texture_filter = 1
 collision_layer = 2
 script = ExtResource("1_es1fo")
 slash_scene = ExtResource("3_c14pu")

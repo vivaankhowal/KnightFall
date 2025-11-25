@@ -60,6 +60,7 @@ var dash_dir: Vector2 = Vector2.ZERO
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 @onready var attack_timer: Timer = Timer.new()
 @onready var health_bar: ProgressBar = $HealthBar/ProgressBar
+@onready var flash_mat := ShaderMaterial.new()
 
 # ============================================================
 # READY
@@ -71,6 +72,9 @@ func _ready() -> void:
 	attack_timer.timeout.connect(_on_attack_timer_timeout)
 	current_health = max_health
 	update_health_bar()
+	var shader := load("res://red_flash.gdshader")
+	flash_mat.shader = shader
+
 
 # ============================================================
 # MAIN LOOP
@@ -138,7 +142,10 @@ func update_animation() -> void:
 # MOVEMENT INPUT
 # ============================================================
 func handle_movement_input(delta: float) -> void:
-# Player ALWAYS moves unless stunned or knocked back
+	# Completely ignore player input during knockback or hit stun
+	if is_knockback or is_hit_stunned:
+		return
+
 	if not is_hit_stunned and not is_knockback:
 		input_dir = Vector2(
 			Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
@@ -331,13 +338,14 @@ func update_health_bar() -> void:
 func take_damage(amount: int, from: Vector2 = Vector2.ZERO) -> void:
 	if is_dashing or is_invincible:
 		return
+	input_dir = Vector2.ZERO
 
 	current_health -= amount
 	current_health = clamp(current_health, 0, max_health)
 	update_health_bar()
 
 	play_hit_effects(from)
-
+	
 	if current_health <= 0:
 		die()
 
@@ -366,6 +374,10 @@ func play_hit_effects(from: Vector2 = Vector2.ZERO):
 	if "hit" in anim.sprite_frames.get_animation_names():
 		anim.play("hit")
 
+# Apply the red flash material if not already set
+	anim.material = flash_mat
+	start_red_flash()
+
 	await get_tree().create_timer(invincibility_time).timeout
 	is_hit_stunned = false
 	is_invincible = false
@@ -379,3 +391,16 @@ func die() -> void:
 		anim.play("death")
 	await anim.animation_finished
 	queue_free()
+
+func start_red_flash():
+	# Blink several times during invincibility
+	var blink_count := 6
+	var blink_interval := invincibility_time / (blink_count * 2.0)
+
+	for i in blink_count:
+		anim.material.set_shader_parameter("flash", true)
+		await get_tree().create_timer(blink_interval).timeout
+		anim.material.set_shader_parameter("flash", false)
+		await get_tree().create_timer(blink_interval).timeout
+	# Ensure final state is off
+	anim.material.set_shader_parameter("flash", false)
