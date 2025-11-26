@@ -1,55 +1,56 @@
-[gd_scene load_steps=9 format=3 uid="uid://dyvdva7e8553e"]
+[gd_scene load_steps=10 format=3 uid="uid://dyvdva7e8553e"]
 
 [ext_resource type="Script" uid="uid://bsg1gols483he" path="res://HitSpark.gd" id="1_jtpf6"]
-[ext_resource type="Texture2D" uid="uid://dkcb3twiqwmnr" path="res://hitspark.png" id="1_pkquc"]
+[ext_resource type="Texture2D" uid="uid://nvjop7u462p5" path="res://hitspark2.png" id="3_vq3y6"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_jtpf6"]
-atlas = ExtResource("1_pkquc")
-region = Rect2(0, 0, 384, 384)
+[sub_resource type="AtlasTexture" id="AtlasTexture_m38iw"]
+atlas = ExtResource("3_vq3y6")
+region = Rect2(0, 0, 576, 576)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_vq3y6"]
-atlas = ExtResource("1_pkquc")
-region = Rect2(384, 0, 384, 384)
+[sub_resource type="AtlasTexture" id="AtlasTexture_qmydi"]
+atlas = ExtResource("3_vq3y6")
+region = Rect2(576, 0, 576, 576)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_kkqer"]
-atlas = ExtResource("1_pkquc")
-region = Rect2(0, 384, 384, 384)
+[sub_resource type="AtlasTexture" id="AtlasTexture_6q4hs"]
+atlas = ExtResource("3_vq3y6")
+region = Rect2(1152, 0, 576, 576)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_tlmf6"]
-atlas = ExtResource("1_pkquc")
-region = Rect2(384, 384, 384, 384)
+[sub_resource type="AtlasTexture" id="AtlasTexture_hlcf1"]
+atlas = ExtResource("3_vq3y6")
+region = Rect2(0, 576, 576, 576)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_k1exm"]
-atlas = ExtResource("1_pkquc")
-region = Rect2(0, 768, 384, 384)
+[sub_resource type="AtlasTexture" id="AtlasTexture_0rvum"]
+atlas = ExtResource("3_vq3y6")
+region = Rect2(576, 576, 576, 576)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2bjll"]
+atlas = ExtResource("3_vq3y6")
+region = Rect2(1152, 576, 576, 576)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_mmwha"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": null
+"texture": SubResource("AtlasTexture_m38iw")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_jtpf6")
+"texture": SubResource("AtlasTexture_qmydi")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_vq3y6")
+"texture": SubResource("AtlasTexture_6q4hs")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_kkqer")
+"texture": SubResource("AtlasTexture_hlcf1")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_tlmf6")
+"texture": SubResource("AtlasTexture_0rvum")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_k1exm")
-}, {
-"duration": 1.0,
-"texture": null
+"texture": SubResource("AtlasTexture_2bjll")
 }],
 "loop": false,
 "name": &"spark",
-"speed": 10.0
+"speed": 18.0
 }]
 
 [node name="HitSpark" type="Node2D"]
@@ -58,14 +59,13 @@ script = ExtResource("1_jtpf6")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 z_index = 4096
 z_as_relative = false
-position = Vector2(1.9073486e-06, 0)
-scale = Vector2(0.1, 0.1)
+position = Vector2(5.999999, 5.9604645e-08)
+scale = Vector2(0.2, 0.2)
 sprite_frames = SubResource("SpriteFrames_mmwha")
 animation = &"spark"
 autoplay = "spark"
-frame_progress = 1.0
 
 [node name="Timer" type="Timer" parent="."]
-wait_time = 0.2
+wait_time = 0.3
 one_shot = true
 autostart = true

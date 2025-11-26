@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=3 uid="uid://hhfgtlfeefv2"]
 
-[ext_resource type="Texture2D" uid="uid://sea7yipdyk68" path="res://dusttrail.png" id="1_0vw0a"]
+[ext_resource type="Texture2D" uid="uid://sea7yipdyk68" path="res://Items/Characters/Player/dust/dusttrail.png" id="1_0vw0a"]
 [ext_resource type="Script" uid="uid://dl62hg4h1pg7u" path="res://Items/Characters/Player/dust/dust_trail.gd" id="2_i84yr"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3r0or"]
@@ -69,7 +69,6 @@ animations = [{
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D"]
 texture_filter = 1
-scale = Vector2(0.2, 0.2)
 sprite_frames = SubResource("SpriteFrames_s6oax")
 animation = &"dust"
 frame = 7

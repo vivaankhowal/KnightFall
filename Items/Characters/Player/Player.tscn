@@ -1,4 +1,4 @@
-[gd_scene load_steps=79 format=3 uid="uid://bv7mcbtqpuee"]
+[gd_scene load_steps=80 format=3 uid="uid://bv7mcbtqpuee"]
 
 [ext_resource type="Script" uid="uid://cfg1irk0mn7ga" path="res://Items/Characters/Player/Player.gd" id="1_es1fo"]
 [ext_resource type="Texture2D" uid="uid://bhxwthhmfuqxw" path="res://Items/Characters/Player/death/sprite-3-2.png" id="2_8q3pd"]
@@ -59,6 +59,7 @@
 [ext_resource type="Texture2D" uid="uid://c5gnh1w8n3nol" path="res://Items/Characters/Player/idle/sprite-16-13.png" id="29_dsfuw"]
 [ext_resource type="Texture2D" uid="uid://bbwdp7ys3wqb1" path="res://Items/Characters/Player/idle/sprite-19-1.png" id="30_osjv5"]
 [ext_resource type="Texture2D" uid="uid://jdeexwjupx00" path="res://Items/Characters/Player/idle/sprite-19-4.png" id="31_bbwwh"]
+[ext_resource type="Texture2D" uid="uid://cb2jpens4mr0p" path="res://healthframe.png" id="76_tr0k7"]
 [ext_resource type="SpriteFrames" uid="uid://nrs6730yn8fw" path="res://healthbar_frames.tres" id="76_w6ef4"]
 [ext_resource type="Texture2D" uid="uid://f1wb42f6yaxi" path="res://Items/Characters/Player/run/1.png" id="79_ilgj2"]
 [ext_resource type="Texture2D" uid="uid://byo15kdyv8rc1" path="res://Items/Characters/Player/run/2.png" id="80_ijmar"]
@@ -327,6 +328,7 @@ size = Vector2(20, 26)
 
 [node name="Player" type="CharacterBody2D" groups=["freezeable", "player"]]
 texture_filter = 1
+position = Vector2(350, 98)
 collision_layer = 2
 script = ExtResource("1_es1fo")
 slash_scene = ExtResource("3_c14pu")
@@ -338,7 +340,7 @@ dash_ghost_scene = ExtResource("5_7bl4c")
 process_mode = 3
 texture_filter = 1
 position = Vector2(0, -6)
-scale = Vector2(0.25, 0.25)
+scale = Vector2(0.9, 0.9)
 sprite_frames = SubResource("SpriteFrames_xhfnw")
 animation = &"hit"
 
@@ -350,7 +352,7 @@ shape = SubResource("RectangleShape2D_xgqey")
 position = Vector2(3.333332, -1.6666666)
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(4, 4)
+zoom = Vector2(2, 2)
 position_smoothing_enabled = true
 position_smoothing_speed = 10.0
 script = ExtResource("100_f2hkb")
@@ -360,10 +362,24 @@ script = ExtResource("100_f2hkb")
 [node name="HealthBar" type="Control" parent="HUD"]
 layout_mode = 3
 anchors_preset = 0
+offset_left = 350.0
+offset_top = 98.0
+offset_right = 350.0
+offset_bottom = 98.0
+metadata/_edit_use_anchors_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="HUD/HealthBar"]
+texture_filter = 1
+position = Vector2(-94, -19)
+scale = Vector2(0.15, 0.15)
+texture = ExtResource("76_tr0k7")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="HUD/HealthBar"]
-position = Vector2(31, 19)
-scale = Vector2(0.5, 0.5)
+texture_filter = 1
+position = Vector2(-188, -46)
+scale = Vector2(0.15, 0.15)
 sprite_frames = ExtResource("76_w6ef4")
+frame = 10
+frame_progress = 0.6696413
 centered = false
 offset = Vector2(20, 20)

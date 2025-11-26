@@ -358,6 +358,7 @@ size = Vector2(21, 27)
 size = Vector2(29, 35)
 
 [node name="BigTeeth" type="CharacterBody2D" groups=["enemy"]]
+scale = Vector2(3.5, 3.5)
 collision_layer = 4
 script = ExtResource("1_tjmy8")
 
@@ -367,9 +368,9 @@ script = ExtResource("1_tjmy8")
 texture_filter = 1
 material = SubResource("ShaderMaterial_6do27")
 sprite_frames = SubResource("SpriteFrames_j4qr3")
-animation = &"death"
-frame = 14
-frame_progress = 1.0
+animation = &"attack"
+
+[node name="CorpseSprite" type="Sprite2D" parent="SpriteRoot"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-0.5, 4.5)

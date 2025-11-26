@@ -3,19 +3,23 @@ extends Area2D
 # -------------------------------
 # CONFIG
 # -------------------------------
-@export var speed: float = 500.0
-@export var lifetime: float = 0.4
+@export var speed: float = 2500.0
+@export var lifetime: float = 0.5
 @export var base_damage: int = 10
 @export var hit_effect_scene: PackedScene
 @export var damage_multiplier: float = 1.0
-@export var fade_out: bool = true
+
+# Slash slowdown over time
+@export var slowdown_rate: float = 2.2
 
 # -------------------------------
 # STATE
 # -------------------------------
 var direction: Vector2 = Vector2.ZERO
 var timer: float = 0.0
-var already_hit = []
+var already_hit := []
+var speed_multiplier: float = 1.0
+
 
 # -------------------------------
 # READY
@@ -24,43 +28,39 @@ func _ready() -> void:
 	connect("body_entered", Callable(self, "_on_body_entered"))
 	connect("area_entered", Callable(self, "_on_area_entered"))
 
+
 # -------------------------------
 # PHYSICS
 # -------------------------------
 func _physics_process(delta: float) -> void:
-	global_position += direction * speed * delta
+
+	# --- SPEED DECREASE ---
+	speed_multiplier = max(speed_multiplier - slowdown_rate * delta, 0.0)
+
+	# --- MOVEMENT ---
+	global_position += direction * speed * speed_multiplier * delta
+
 	timer += delta
-
-	# Fade-out effect
-	if fade_out:
-		var t: float = timer / lifetime
-		var alpha: float = clamp(1.0 - t, 0.0, 1.0)
-		modulate.a = alpha
-
-		# Optional shrink
-
 	if timer >= lifetime:
 		queue_free()
 
+
 # -------------------------------
-# COLLISION
+# COLLISION HANDLING
 # -------------------------------
 func _on_body_entered(body):
-	if body.is_in_group("enemy") and body not in already_hit:
-		already_hit.append(body)
 
-		# Damage
+	# -------------------------
+	# ENEMY HIT
+	# -------------------------
+	if body.is_in_group("enemy") and body not in already_hit:
+
+		already_hit.append(body)
 		body.take_damage(base_damage * damage_multiplier, global_position)
 
-		# Hit spark for THIS enemy
-		if hit_effect_scene:
-			var fx = hit_effect_scene.instantiate()
-			get_parent().add_child(fx)
-			fx.global_position = body.global_position
-
-	# IMPORTANT:
-	# Do NOT queue_free() here
-	# Slash continues moving through enemies
+		_play_enemy_hit_fx(body)
+		queue_free()
+		return
 
 
 func _on_area_entered(area: Node) -> void:
@@ -68,21 +68,35 @@ func _on_area_entered(area: Node) -> void:
 
 
 func _handle_hit(target: Node) -> void:
-	if not target.is_in_group("enemy"):
+
+	# -------------------------
+	# ENEMY HIT
+	# -------------------------
+	if target.is_in_group("enemy"):
+
+		if target not in already_hit:
+			already_hit.append(target)
+			_play_enemy_hit_fx(target)
+
+			if target.has_method("take_damage"):
+				var final_damage = int(base_damage * damage_multiplier)
+				target.take_damage(final_damage)
+
+		queue_free()
 		return
 
-	if target not in already_hit:
-		already_hit.append(target)
 
-		# Hit spark for THIS enemy
-		if hit_effect_scene:
-			var fx = hit_effect_scene.instantiate()
-			get_parent().add_child(fx)
-			fx.global_position = target.global_position
+# -------------------------------
+# HIT EFFECT HELPERS
+# -------------------------------
+func _play_enemy_hit_fx(enemy):
+	if hit_effect_scene:
+		var fx = hit_effect_scene.instantiate()
+		get_parent().add_child(fx)
 
-		# Damage
-		if target.has_method("take_damage"):
-			var final_damage = int(base_damage * damage_multiplier)
-			target.take_damage(final_damage)
+		# place spark slightly INTO the enemy
+		fx.global_position = enemy.global_position - direction * 6
 
-	# Do NOT queue_free() here either
+		# flip spark based on slash direction
+		if direction.x > 0:
+			fx.scale.x = -fx.scale.x

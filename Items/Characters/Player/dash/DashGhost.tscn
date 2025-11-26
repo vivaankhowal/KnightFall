@@ -1,7 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cygicneinbjkt"]
 
-[ext_resource type="Script" uid="uid://bt6gghu45cffl" path="res://dash_ghost.gd" id="1_ocj84"]
+[ext_resource type="Script" uid="uid://bt6gghu45cffl" path="res://Items/Characters/Player/dash/dash_ghost.gd" id="1_ocj84"]
 
 [node name="DashGhost" type="Sprite2D"]
-scale = Vector2(0.3, 0.3)
 script = ExtResource("1_ocj84")
