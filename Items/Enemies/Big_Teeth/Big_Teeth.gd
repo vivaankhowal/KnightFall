@@ -35,8 +35,8 @@ var corpse_drag := 8.0
 var corpse_landed := false
 
 # Jump arc variables
-var corpse_jump_height := 18.0
-var corpse_jump_time := 0.28
+var corpse_jump_height := 35.0
+var corpse_jump_time := 1
 var corpse_jump_elapsed := 0.0
 var corpse_vertical_offset := 0.0
 

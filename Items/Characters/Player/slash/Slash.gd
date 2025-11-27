@@ -3,7 +3,7 @@ extends Area2D
 # -------------------------------
 # CONFIG
 # -------------------------------
-@export var speed: float = 2500.0
+@export var speed: float = 3000.0
 @export var lifetime: float = 0.5
 @export var base_damage: int = 10
 @export var hit_effect_scene: PackedScene
