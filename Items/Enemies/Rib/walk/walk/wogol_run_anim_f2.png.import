@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dkcb3twiqwmnr"
-path="res://.godot/imported/hitspark.png-cbd85bdd47019ec9ae5bcb03706db71d.ctex"
+uid="uid://bc51530th5uj"
+path="res://.godot/imported/wogol_run_anim_f2.png-75e478f592659f40874fe9e02a28dc4d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://hitspark.png"
-dest_files=["res://.godot/imported/hitspark.png-cbd85bdd47019ec9ae5bcb03706db71d.ctex"]
+source_file="res://Items/Enemies/Rib/walk/walk/wogol_run_anim_f2.png"
+dest_files=["res://.godot/imported/wogol_run_anim_f2.png-75e478f592659f40874fe9e02a28dc4d.ctex"]
 
 [params]
 

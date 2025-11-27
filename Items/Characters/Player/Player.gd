@@ -71,6 +71,8 @@ func _ready() -> void:
 	update_health_bar()
 	var shader := load("res://red_flash.gdshader")
 	flash_mat.shader = shader
+	var crosshair = load("res://crosshair.png")
+	Input.set_custom_mouse_cursor(crosshair, Input.CURSOR_ARROW, Vector2(16, 16))
 
 # ============================================================
 # MAIN LOOP
@@ -389,13 +391,24 @@ func die() -> void:
 	queue_free()
 
 func start_red_flash():
-	var blink_count := 8   # increase number of flashes for 2 sec
-	var blink_interval := invincibility_time / (blink_count * 2.0)
+	var overlay = get_tree().get_first_node_in_group("overlay")
+	var blink_count: int = 8   # number of flashes
+	var blink_interval: float = invincibility_time / (blink_count * 2.0)
 
 	for i in blink_count:
+		# RED SILHOUETTE FLASH
 		anim.material.set_shader_parameter("flash", true)
-		await get_tree().create_timer(blink_interval).timeout
-		anim.material.set_shader_parameter("flash", false)
+
+		# RED VIGNETTE FLASH
+		if overlay:
+			overlay.flash(0.6, blink_interval)
+
 		await get_tree().create_timer(blink_interval).timeout
 
+		# RED SILHOUETTE OFF
+		anim.material.set_shader_parameter("flash", false)
+
+		await get_tree().create_timer(blink_interval).timeout
+
+	# Ensure silhouette ends off
 	anim.material.set_shader_parameter("flash", false)

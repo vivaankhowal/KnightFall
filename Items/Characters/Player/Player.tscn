@@ -324,7 +324,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xgqey"]
-size = Vector2(20, 26)
+size = Vector2(47, 86)
 
 [node name="Player" type="CharacterBody2D" groups=["freezeable", "player"]]
 texture_filter = 1
@@ -345,7 +345,7 @@ sprite_frames = SubResource("SpriteFrames_xhfnw")
 animation = &"hit"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(3, -6)
+position = Vector2(5.5, -4)
 shape = SubResource("RectangleShape2D_xgqey")
 
 [node name="SlashSpawn" type="Marker2D" parent="."]
@@ -358,6 +358,7 @@ position_smoothing_speed = 10.0
 script = ExtResource("100_f2hkb")
 
 [node name="HUD" type="CanvasLayer" parent="."]
+visible = false
 
 [node name="HealthBar" type="Control" parent="HUD"]
 layout_mode = 3

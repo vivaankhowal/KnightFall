@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=3 uid="uid://dnkooekb50pwf"]
+[gd_scene load_steps=46 format=3 uid="uid://dnkooekb50pwf"]
 
 [ext_resource type="Script" uid="uid://bpxnjsvgxutqt" path="res://Items/Enemies/Chomper/Chomper.gd" id="1_5pru2"]
 [ext_resource type="Shader" uid="uid://cbxct24ys224x" path="res://flash_shader.gdshader" id="2_60lsx"]
@@ -42,63 +42,59 @@ region = Rect2(2048, 4096, 2048, 2048)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1ke5h"]
 atlas = ExtResource("4_6xkvw")
-region = Rect2(768, 0, 768, 768)
+region = Rect2(0, 0, 192, 192)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_m2q6i"]
 atlas = ExtResource("4_6xkvw")
-region = Rect2(1536, 0, 768, 768)
+region = Rect2(192, 0, 192, 192)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5hxdf"]
 atlas = ExtResource("4_6xkvw")
-region = Rect2(2304, 0, 768, 768)
+region = Rect2(384, 0, 192, 192)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_37cv4"]
 atlas = ExtResource("4_6xkvw")
-region = Rect2(0, 768, 768, 768)
+region = Rect2(576, 0, 192, 192)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_n15gq"]
 atlas = ExtResource("4_6xkvw")
-region = Rect2(768, 768, 768, 768)
+region = Rect2(0, 192, 192, 192)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wv5in"]
 atlas = ExtResource("4_6xkvw")
-region = Rect2(1536, 768, 768, 768)
+region = Rect2(192, 192, 192, 192)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pwq4e"]
 atlas = ExtResource("4_6xkvw")
-region = Rect2(2304, 768, 768, 768)
+region = Rect2(384, 192, 192, 192)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1o5c6"]
 atlas = ExtResource("4_6xkvw")
-region = Rect2(0, 1536, 768, 768)
+region = Rect2(576, 192, 192, 192)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mtov3"]
 atlas = ExtResource("4_6xkvw")
-region = Rect2(768, 1536, 768, 768)
+region = Rect2(0, 384, 192, 192)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_250qa"]
 atlas = ExtResource("4_6xkvw")
-region = Rect2(1536, 1536, 768, 768)
+region = Rect2(192, 384, 192, 192)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0j2vy"]
 atlas = ExtResource("4_6xkvw")
-region = Rect2(2304, 1536, 768, 768)
+region = Rect2(384, 384, 192, 192)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_63ylo"]
 atlas = ExtResource("4_6xkvw")
-region = Rect2(0, 2304, 768, 768)
+region = Rect2(576, 384, 192, 192)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_odpba"]
 atlas = ExtResource("4_6xkvw")
-region = Rect2(768, 2304, 768, 768)
+region = Rect2(0, 576, 192, 192)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_x6a1e"]
 atlas = ExtResource("4_6xkvw")
-region = Rect2(1536, 2304, 768, 768)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_cuv6l"]
-atlas = ExtResource("4_6xkvw")
-region = Rect2(2304, 2304, 768, 768)
+region = Rect2(192, 576, 192, 192)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4d1sw"]
 atlas = ExtResource("6_c2uoy")
@@ -207,9 +203,6 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_x6a1e")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_cuv6l")
 }],
 "loop": false,
 "name": &"death",
@@ -269,13 +262,12 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_s7bn3"]
-size = Vector2(21, 27)
+size = Vector2(35, 76)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2hac7"]
-size = Vector2(29, 35)
+size = Vector2(51, 87)
 
 [node name="Chomper" type="CharacterBody2D" groups=["enemy"]]
-scale = Vector2(2.5, 2.5)
 collision_layer = 4
 script = ExtResource("1_5pru2")
 
@@ -290,10 +282,11 @@ animation = &"walk"
 [node name="CorpseSprite" type="Sprite2D" parent="SpriteRoot"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-0.5, 4.5)
+position = Vector2(0.5, 3)
 shape = SubResource("RectangleShape2D_s7bn3")
 
 [node name="HealthBar" type="Node2D" parent="."]
+scale = Vector2(2.5, 2.5)
 
 [node name="TextureBar" type="TextureProgressBar" parent="HealthBar"]
 texture_filter = 1
@@ -313,7 +306,7 @@ collision_layer = 8
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
-position = Vector2(-0.5, 4.5)
+position = Vector2(1.5, 2.5)
 shape = SubResource("RectangleShape2D_2hac7")
 
 [connection signal="body_entered" from="AttackArea" to="." method="_on_attack_area_body_entered"]

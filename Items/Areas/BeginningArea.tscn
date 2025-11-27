@@ -1,6 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://cvmaqq4astvit"]
+[gd_scene load_steps=9 format=3 uid="uid://cvmaqq4astvit"]
 
 [ext_resource type="PackedScene" uid="uid://bv7mcbtqpuee" path="res://Items/Characters/Player/Player.tscn" id="2_npq0p"]
+[ext_resource type="PackedScene" uid="uid://cwebu25hyvwlj" path="res://Items/Enemies/Rib/Rib.tscn" id="6_mjomq"]
 [ext_resource type="Texture2D" uid="uid://smbgayaxqgtw" path="res://Dungeon_Tileset.png" id="6_q2iwd"]
 [ext_resource type="PackedScene" uid="uid://dnkooekb50pwf" path="res://Items/Enemies/Chomper/Chomper.tscn" id="12_twiir"]
 [ext_resource type="PackedScene" uid="uid://dy8h8pxa28i07" path="res://Items/Characters/Player/hit/DamageOverlay.tscn" id="13_2w4de"]
@@ -372,3 +373,6 @@ position = Vector2(2202.9998, 662)
 
 [node name="BigTeeth" parent="." instance=ExtResource("13_otngv")]
 position = Vector2(1645.0001, 995.0001)
+
+[node name="Rib" parent="." instance=ExtResource("6_mjomq")]
+position = Vector2(2284, 1053)

@@ -59,8 +59,8 @@ script = ExtResource("1_jtpf6")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 z_index = 4096
 z_as_relative = false
-position = Vector2(5.999999, 5.9604645e-08)
-scale = Vector2(0.2, 0.2)
+position = Vector2(30, 0)
+scale = Vector2(0.3, 0.3)
 sprite_frames = SubResource("SpriteFrames_mmwha")
 animation = &"spark"
 autoplay = "spark"
