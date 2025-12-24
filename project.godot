@@ -17,7 +17,7 @@ config/icon="res://icon.svg"
 
 [display]
 
-mouse_cursor/custom_image="uid://chvi58aukh2vj"
+mouse_cursor/custom_image="uid://hvj66megcavw"
 mouse_cursor/custom_image_hotspot=Vector2(18, 18)
 mouse_cursor/tooltip_position_offset=Vector2(0, 0)
 

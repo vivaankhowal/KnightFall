@@ -4,25 +4,21 @@ extends CharacterBody2D
 # ===============  TUNABLE EXPORTED VARIABLES ==========
 # ======================================================
 
-# Movement / Combat
-@export var move_speed: float = 180.0
+@export var move_speed: float = 60.0
 @export var damage: int = 10
-@export var max_health: int = 30
+@export var max_health: int = 20
 @export var attack_cooldown: float = 1.0
 @export var target_path: NodePath
+@export var separation_radius: float = 40.0
+@export var separation_force: float = 200.0
 
-# Hit Knockback
-@export var hit_knockback_force: float = 150.0
+# Normal hit knockback
+@export var hit_knockback_force: float = 200.0
 @export var hit_knockback_friction: float = 600.0
 
-# Death Knockback
-@export var death_knockback_force: float = 1800.0
-@export var death_tilt_angle: float = 20.0
-@export var corpse_drag: float = 4.0
-
-# Death Arc
-@export var corpse_jump_height: float = 40.0
-@export var corpse_jump_time: float = 0.4
+# Death slide knockback
+@export var death_slide_force: float = 1000.0
+@export var death_slide_friction: float = 6000.0
 
 # ======================================================
 # ================== INTERNAL STATE ====================
@@ -35,27 +31,27 @@ var is_dead: bool = false
 var player_in_range: bool = false
 var spawning: bool = true
 
-var knockback_velocity: Vector2 = Vector2.ZERO
-var squash_tween: Tween
 var sprite_material: ShaderMaterial
+var squash_tween: Tween
+var knockback_velocity: Vector2 = Vector2.ZERO
 
-# Corpse physics
-var corpse_mode := false
-var corpse_velocity := Vector2.ZERO
-var corpse_landed := false
-var corpse_jump_elapsed: float = 0.0
-var corpse_vertical_offset: float = 0.0
+# Death slide
+var death_knockback_velocity: Vector2 = Vector2.ZERO
+var sliding_on_death: bool = false
+
+# Hit spark alternator
+var hitspark_toggle: bool = false
 
 # ======================================================
 # ===================== NODE REFERENCES ===============
 # ======================================================
 
 @onready var anim: AnimatedSprite2D = $SpriteRoot/AnimatedSprite2D
-@onready var corpse_sprite: Sprite2D = $SpriteRoot/CorpseSprite
+@onready var hitspark: AnimatedSprite2D = $SpriteRoot/HitSpark
 @onready var attack_area: Area2D = $AttackArea
 @onready var cooldown_timer: Timer = Timer.new()
 @onready var health_bar: TextureProgressBar = $HealthBar/TextureBar
-@onready var sprite_root = $SpriteRoot
+@onready var sprite_root := $SpriteRoot
 
 # ======================================================
 # ========================= READY ======================
@@ -64,8 +60,10 @@ var corpse_vertical_offset: float = 0.0
 func _ready():
 	anim.material = anim.material.duplicate()
 	sprite_material = anim.material
-	corpse_sprite.material = anim.material.duplicate()
 	anim.animation_finished.connect(_on_anim_finished)
+
+	# hitspark initially hidden
+	hitspark.visible = false
 
 	if target_path != NodePath():
 		player = get_node_or_null(target_path)
@@ -94,24 +92,31 @@ func _ready():
 # ======================================================
 
 func _physics_process(delta: float) -> void:
-
-	if corpse_mode:
-		_process_corpse_jump(delta)
+	if sliding_on_death:
+		velocity = death_knockback_velocity
+		death_knockback_velocity = death_knockback_velocity.move_toward(Vector2.ZERO, death_slide_friction * delta)
+		move_and_slide()
 		return
 
+	if is_dead:
+		return
+
+	if spawning or not player:
+		return
+
+	# Hit knockback
 	if knockback_velocity.length() > 1.0:
 		velocity = knockback_velocity
 		knockback_velocity = knockback_velocity.move_toward(Vector2.ZERO, hit_knockback_friction * delta)
 		move_and_slide()
 		return
 
-	if is_dead or spawning or not player:
-		return
-
+	# follow player
 	var dir = (player.global_position - global_position).normalized()
 
 	if not player_in_range:
-		velocity = dir * move_speed
+		var sep = get_separation_vector()
+		velocity = (dir + sep * separation_force).normalized() * move_speed
 		anim.flip_h = dir.x < 0
 	else:
 		velocity = Vector2.ZERO
@@ -120,26 +125,6 @@ func _physics_process(delta: float) -> void:
 
 	if player_in_range and can_attack:
 		attack_player()
-
-# ======================================================
-# ====================== CORPSE JUMP ===================
-# ======================================================
-
-func _process_corpse_jump(delta):
-	corpse_jump_elapsed += delta
-	var t: float = min(corpse_jump_elapsed / corpse_jump_time, 1.0)
-
-	var jump_amount := 1.0 - pow(2.0 * t - 1.0, 2.0)
-	corpse_vertical_offset = jump_amount * corpse_jump_height
-	sprite_root.position.y = -corpse_vertical_offset
-
-	corpse_velocity.x = lerp(corpse_velocity.x, 0.0, corpse_drag * delta)
-	velocity = corpse_velocity
-	move_and_slide()
-
-	if t == 1.0 and not corpse_landed:
-		corpse_landed = true
-		_on_corpse_landed()
 
 # ======================================================
 # ======================== ATTACK ======================
@@ -159,13 +144,8 @@ func attack_player():
 
 	can_attack = false
 
-	if anim.sprite_frames.has_animation("attack"):
-		anim.play("attack")
-
 	if player and player.has_method("take_damage"):
 		player.take_damage(damage, global_position)
-		await anim.animation_finished
-		anim.play("walk")
 
 	cooldown_timer.start(attack_cooldown)
 
@@ -173,29 +153,68 @@ func _on_cooldown_timeout():
 	can_attack = true
 
 # ======================================================
-# ==================== DAMAGE & DEATH ==================
+# ======================== HITSPARK =====================
+# ======================================================
+
+func _play_hitspark():
+	hitspark.visible = true
+
+	# alternate between hit1 and hit2
+	if hitspark_toggle:
+		hitspark.play("hit1")
+	else:
+		hitspark.play("hit2")
+
+	hitspark_toggle = !hitspark_toggle
+
+	hitspark.animation_finished.connect(func():
+		hitspark.visible = false
+	, CONNECT_ONE_SHOT)
+
+# ======================================================
+# ==================== DAMAGE & HIT ====================
 # ======================================================
 
 func take_damage(amount: int, from: Vector2 = Vector2.ZERO):
-	if is_dead: return
+	if is_dead:
+		return
 
 	current_health -= amount
 	update_health_bar()
 
+	# HITSPARK
+	_play_hitspark()
+
+	# Normal slide knockback
+	var dir = (global_position - from).normalized()
+	knockback_velocity = dir * hit_knockback_force
+
+	# White flash
 	if sprite_material:
 		sprite_material.set("shader_parameter/flash_strength", 1.0)
-		get_tree().create_timer(0.2).timeout.connect(func():
+		get_tree().create_timer(0.05).timeout.connect(func():
 			sprite_material.set("shader_parameter/flash_strength", 0.0)
 		)
 
-	var dir = (global_position - player.global_position).normalized()
-	knockback_velocity = dir * hit_knockback_force
+	# Stretch (ONLY enemy sprite, NOT hitspark)
+	if squash_tween:
+		squash_tween.kill()
 
+	sprite_root.scale = Vector2.ONE
+
+	squash_tween = create_tween()
+	squash_tween.set_trans(Tween.TRANS_SINE)
+	squash_tween.set_ease(Tween.EASE_OUT)
+	squash_tween.tween_property(sprite_root, "scale", Vector2(1.1, 1.4), 0.08)
+	squash_tween.tween_property(sprite_root, "scale", Vector2.ONE, 0.18)
+
+	# hit animation
 	if anim.sprite_frames.has_animation("hit"):
 		anim.play("hit")
+		await anim.animation_finished
 
 	if current_health <= 0:
-		die()
+		die(from)
 		return
 
 	anim.play("walk")
@@ -204,56 +223,27 @@ func take_damage(amount: int, from: Vector2 = Vector2.ZERO):
 # ======================== DEATH =======================
 # ======================================================
 
-func die():
-	if is_dead: return
-
+func die(from: Vector2):
+	if is_dead:
+		return
 	is_dead = true
-	velocity = Vector2.ZERO
+
 	$HealthBar.visible = false
 	player_in_range = false
 	attack_area.monitoring = false
 
-	anim.stop()
-	anim.visible = false
-
-	corpse_sprite.texture = anim.sprite_frames.get_frame_texture("walk", 0)
-	corpse_sprite.visible = true
-
-	var face_dir: float = sign(player.global_position.x - global_position.x)
-	if face_dir == 0: face_dir = 1
-
-	anim.flip_h = face_dir < 0
-	corpse_sprite.flip_h = face_dir < 0
-
-	var knockback_dir: float = -face_dir
-	corpse_velocity = Vector2(knockback_dir * death_knockback_force, 0)
-
-	corpse_mode = true
-	corpse_jump_elapsed = 0.0
-	corpse_landed = false
-	sprite_root.rotation_degrees = -death_tilt_angle * face_dir
-
-# ======================================================
-# ======================= LANDING ======================
-# ======================================================
-
-func _on_corpse_landed():
-	corpse_sprite.visible = false
-	anim.visible = true
-
-	sprite_root.rotation_degrees = 0.0
-
-	if sprite_material:
-		sprite_material.set("shader_parameter/flash_strength", 1.0)
-	await get_tree().create_timer(0.1).timeout
-	if sprite_material:
-		sprite_material.set("shader_parameter/flash_strength", 0.0)
-
+	# Death animation instantly
 	if anim.sprite_frames.has_animation("death"):
 		anim.play("death")
-		await anim.animation_finished
 
-	queue_free()
+	# Death hitspark (hit3)
+	_play_death_hitspark()
+
+	# Strong backward slide
+	var slide_dir = (global_position - from).normalized()
+	death_knockback_velocity = slide_dir * death_slide_force
+	sliding_on_death = true
+
 
 # ======================================================
 # ===================== HEALTH BAR =====================
@@ -264,4 +254,26 @@ func update_health_bar():
 	health_bar.value = current_health
 
 func _on_anim_finished():
-	anim.scale = Vector2.ONE  # scale stays default
+	if is_dead:
+		queue_free()
+
+func _play_death_hitspark():
+	hitspark.visible = true
+	hitspark.play("hit3")
+
+	hitspark.animation_finished.connect(func():
+		hitspark.visible = false
+	, CONNECT_ONE_SHOT)
+
+func get_separation_vector() -> Vector2:
+	var push = Vector2.ZERO
+
+	for enemy in get_tree().get_nodes_in_group("enemy"):
+		if enemy == self:
+			continue
+		
+		var dist = global_position.distance_to(enemy.global_position)
+		if dist < separation_radius and dist > 0:
+			push += (global_position - enemy.global_position).normalized() * (separation_radius - dist)
+
+	return push.normalized()
