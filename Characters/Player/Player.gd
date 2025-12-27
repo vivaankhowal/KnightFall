@@ -7,6 +7,13 @@ extends CharacterBody2D
 @export var max_health: int = 100
 @export var attack_cooldown: float = 0.35
 
+# --- Dash Ghosts ---
+@export var dash_ghost_interval: float = 0.025
+@onready var dash_ghost_scene := preload("res://Characters/Player/dash/DashGhost.tscn")
+
+var dash_ghost_timer: float = 0.0
+var dash_ghost_index: int = 0
+
 # --- Sword ---
 @export var hand_reach: float = 22.0
 @export var swing_arc: float = 140.0
@@ -89,15 +96,21 @@ func _process(delta: float) -> void:
 	if attack_cooldown_timer > 0.0:
 		attack_cooldown_timer -= delta
 
-
 func _physics_process(delta: float) -> void:
 	handle_dash_timers(delta)
 
+	# --- DASH GHOSTS + MOVEMENT ---
 	if is_dashing:
+		dash_ghost_timer -= delta
+		if dash_ghost_timer <= 0.0:
+			spawn_dash_ghost()
+			dash_ghost_timer = dash_ghost_interval
+
 		velocity = dash_dir * dash_speed
 		move_and_slide()
 		return
 
+	# --- KNOCKBACK ---
 	if is_knockback:
 		velocity = knockback_velocity
 		knockback_velocity = knockback_velocity.move_toward(
@@ -168,18 +181,14 @@ func handle_attack(delta: float) -> void:
 				hand_hitbox.monitoring = false
 
 func start_attack() -> void:
-	# Block if swinging OR on cooldown
 	if attack_state == AttackState.SWINGING:
 		return
-
 	if attack_cooldown_timer > 0.0:
 		return
 
 	attack_state = AttackState.SWINGING
 	swing_progress = 0.0
 	hand_hitbox.monitoring = true
-
-	# START COOLDOWN
 	attack_cooldown_timer = attack_cooldown
 
 	spawn_slash()
@@ -234,19 +243,26 @@ func start_dash() -> void:
 	dash_timer = dash_duration
 	dash_dir = input_dir if input_dir != Vector2.ZERO else attack_dir
 
+	dash_ghost_timer = 0.0
+	dash_ghost_index = 0
+
+	set_white_silhouette(true)
+
 func handle_dash_timers(delta: float) -> void:
 	if is_dashing:
 		dash_timer -= delta
 		if dash_timer <= 0.0:
 			is_dashing = false
 			dash_cooldown_timer = dash_cooldown
+			set_white_silhouette(false)
+
 	elif not can_dash:
 		dash_cooldown_timer -= delta
 		if dash_cooldown_timer <= 0.0:
 			can_dash = true
 
 # ============================================================
-# DAMAGE + FLASH FX
+# DAMAGE + FLASH FX (SHADER-BASED)
 # ============================================================
 func take_damage(amount: int, from: Vector2 = Vector2.ZERO) -> void:
 	if is_invincible or is_dashing:
@@ -259,17 +275,14 @@ func take_damage(amount: int, from: Vector2 = Vector2.ZERO) -> void:
 	is_invincible = true
 	is_hit_stunned = true
 
-	# --- RED VIGNETTE ---
 	var overlay = get_tree().get_first_node_in_group("overlay")
 	if overlay:
 		overlay.flash(0.6, 0.25)
 
-	# --- START RED FLASH ---
 	flash_timer = 0.0
 	flash_on = true
-	anim.modulate = Color(1, 0, 0)
+	set_damage_flash(true)
 
-	# --- KNOCKBACK ---
 	var dir := (global_position - from).normalized()
 	knockback_velocity = dir * hit_knockback_force
 	is_knockback = true
@@ -283,8 +296,7 @@ func take_damage(amount: int, from: Vector2 = Vector2.ZERO) -> void:
 	await get_tree().create_timer(invincibility_time - 0.15).timeout
 	is_invincible = false
 
-	# --- CLEANUP ---
-	anim.modulate = Color.WHITE
+	set_damage_flash(false)
 	flash_on = false
 
 	if current_health <= 0:
@@ -298,7 +310,7 @@ func update_damage_flash(delta: float) -> void:
 	if flash_timer <= 0.0:
 		flash_timer = flash_interval
 		flash_on = not flash_on
-		anim.modulate = Color(1, 0, 0) if flash_on else Color.WHITE
+		set_damage_flash(flash_on)
 
 # ============================================================
 # UI
@@ -306,3 +318,25 @@ func update_damage_flash(delta: float) -> void:
 func update_health_bar() -> void:
 	var percent := float(current_health) / float(max_health)
 	health_bar.frame = clamp(int(round(percent * 10.0)), 0, 10)
+
+# ============================================================
+# SHADER HELPERS
+# ============================================================
+func set_white_silhouette(active: bool) -> void:
+	if anim.material:
+		anim.material.set_shader_parameter("silhouette", active)
+
+func set_damage_flash(active: bool) -> void:
+	if anim.material:
+		anim.material.set_shader_parameter("damage_flash", active)
+
+# ============================================================
+# DASH GHOST
+# ============================================================
+func spawn_dash_ghost() -> void:
+	var ghost := dash_ghost_scene.instantiate()
+	get_tree().current_scene.add_child(ghost)
+
+	var trail_dir := dash_dir if dash_dir != Vector2.ZERO else attack_dir
+	ghost.setup_from_player(anim, trail_dir, dash_ghost_index)
+	dash_ghost_index += 1

@@ -1,7 +1,8 @@
-[gd_scene load_steps=32 format=3 uid="uid://bv7mcbtqpuee"]
+[gd_scene load_steps=34 format=3 uid="uid://bv7mcbtqpuee"]
 
 [ext_resource type="Script" uid="uid://cfg1irk0mn7ga" path="res://Characters/Player/Player.gd" id="1_es1fo"]
 [ext_resource type="PackedScene" uid="uid://dm5mt27mr32lr" path="res://Characters/Player/slash/SlashProjectile.tscn" id="3_c14pu"]
+[ext_resource type="Shader" uid="uid://dxyabl7oi4d7g" path="res://white_silhouette.gdshader" id="3_wraqo"]
 [ext_resource type="Texture2D" uid="uid://brilfdbbqlx5f" path="res://die.png" id="12_rgtww"]
 [ext_resource type="Texture2D" uid="uid://da68y28lbindp" path="res://hurt.png" id="13_d2og2"]
 [ext_resource type="Texture2D" uid="uid://lck6ccx0w7l6" path="res://idle.png" id="29_bx0yf"]
@@ -12,6 +13,11 @@
 [ext_resource type="Texture2D" uid="uid://cb2jpens4mr0p" path="res://healthframe.png" id="76_tr0k7"]
 [ext_resource type="SpriteFrames" uid="uid://nrs6730yn8fw" path="res://healthbar_frames.tres" id="76_w6ef4"]
 [ext_resource type="Script" uid="uid://dulhvspkfoh" path="res://Characters/Player/camera_2d.gd" id="100_f2hkb"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wraqo"]
+shader = ExtResource("3_wraqo")
+shader_parameter/silhouette = false
+shader_parameter/damage_flash = false
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xqos4"]
 atlas = ExtResource("12_rgtww")
@@ -164,9 +170,10 @@ slash_scene = ExtResource("3_c14pu")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 process_mode = 3
 texture_filter = 1
+material = SubResource("ShaderMaterial_wraqo")
 position = Vector2(0, -6)
 sprite_frames = SubResource("SpriteFrames_xhfnw")
-animation = &"death"
+animation = &"hit"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0.5, -2)

@@ -14,10 +14,10 @@
 position = Vector2(2719, 1138)
 
 [node name="BigTeeth" parent="." instance=ExtResource("13_otngv")]
-position = Vector2(1900, 1325)
+position = Vector2(2572, 1240)
 
 [node name="Chomper" parent="." instance=ExtResource("5_6p0p1")]
-position = Vector2(2093, 1181)
+position = Vector2(2502, 1124)
 
 [node name="Rib" parent="." instance=ExtResource("6_2rje1")]
-position = Vector2(2001, 952)
+position = Vector2(2581, 1040)
