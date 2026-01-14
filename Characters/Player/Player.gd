@@ -5,6 +5,7 @@ extends CharacterBody2D
 # ============================================================
 @export var move_speed := 200.0
 @export var max_health := 100
+@onready var damage_silhouette: Sprite2D = $DamageSilhouette
 
 # --- Sword ---
 @export var slash_time := 0.2
@@ -16,7 +17,7 @@ extends CharacterBody2D
 @export var slash_spawn_offset: float = 20.0
 @export var slash_speed: float = 1200.0
 @export var slash_friction: float = 1600.0
-@export var slash_damage: int = 8
+@export var slash_damage: int = 10
 @export var slash_max_pierces: int = 3            # number of enemies it can pierce through
 
 # --- Damage ---
@@ -78,6 +79,7 @@ func _process(delta: float) -> void:
 	update_damage_flash(delta)
 	update_facing()
 	handle_attack()
+	_sync_damage_silhouette()
 
 func _physics_process(delta: float) -> void:
 	if is_knockback:
@@ -260,5 +262,23 @@ func update_health_bar() -> void:
 # SHADER HELPERS
 # ============================================================
 func set_damage_flash(active: bool) -> void:
+	# Existing shader flash
 	if sprite.material:
 		sprite.material.set_shader_parameter("damage_flash", active)
+
+	# NEW silhouette flash
+	if damage_silhouette:
+		damage_silhouette.visible = active
+
+
+func _sync_damage_silhouette() -> void:
+	if not damage_silhouette:
+		return
+
+	damage_silhouette.texture = sprite.texture
+	damage_silhouette.frame = sprite.frame
+	damage_silhouette.flip_h = sprite.flip_h
+	damage_silhouette.flip_v = sprite.flip_v
+	damage_silhouette.global_position = sprite.global_position
+	damage_silhouette.rotation = sprite.rotation
+	damage_silhouette.scale = sprite.scale
