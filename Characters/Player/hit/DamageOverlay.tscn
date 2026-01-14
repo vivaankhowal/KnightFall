@@ -1,9 +1,9 @@
 [gd_scene load_steps=3 format=3 uid="uid://dy8h8pxa28i07"]
 
-[ext_resource type="Script" uid="uid://dprpu0ec5depo" path="res://Items/Characters/Player/hit/damage_overlay.gd" id="1_mmfsr"]
-[ext_resource type="Texture2D" uid="uid://d1lu5ybqllbui" path="res://Items/Characters/Player/hit/redvignette.png" id="2_opi2w"]
+[ext_resource type="Script" uid="uid://dprpu0ec5depo" path="res://Characters/Player/hit/damage_overlay.gd" id="1_mmfsr"]
+[ext_resource type="Texture2D" uid="uid://d1lu5ybqllbui" path="res://Characters/Player/hit/redvignette.png" id="2_opi2w"]
 
-[node name="DamageOverlay" type="CanvasLayer" groups=["overlay"]]
+[node name="DamageOverlay" type="CanvasLayer" groups=["damage_overlay", "overlay"]]
 layer = 99
 script = ExtResource("1_mmfsr")
 

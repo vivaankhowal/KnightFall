@@ -1,182 +1,90 @@
-[gd_scene load_steps=34 format=3 uid="uid://bv7mcbtqpuee"]
+[gd_scene load_steps=11 format=3 uid="uid://bv7mcbtqpuee"]
 
 [ext_resource type="Script" uid="uid://cfg1irk0mn7ga" path="res://Characters/Player/Player.gd" id="1_es1fo"]
-[ext_resource type="PackedScene" uid="uid://dm5mt27mr32lr" path="res://Characters/Player/slash/SlashProjectile.tscn" id="3_c14pu"]
-[ext_resource type="Shader" uid="uid://dxyabl7oi4d7g" path="res://white_silhouette.gdshader" id="3_wraqo"]
-[ext_resource type="Texture2D" uid="uid://brilfdbbqlx5f" path="res://die.png" id="12_rgtww"]
-[ext_resource type="Texture2D" uid="uid://da68y28lbindp" path="res://hurt.png" id="13_d2og2"]
-[ext_resource type="Texture2D" uid="uid://lck6ccx0w7l6" path="res://idle.png" id="29_bx0yf"]
-[ext_resource type="Texture2D" uid="uid://cxhibmsksrf8v" path="res://run.png" id="30_14yy5"]
-[ext_resource type="Script" uid="uid://pc4ldn3060bc" path="res://Characters/Player/HandPivot.gd" id="30_rgtww"]
-[ext_resource type="Script" uid="uid://c7iriit8f5pcs" path="res://Characters/Player/Hand.gd" id="31_d2og2"]
-[ext_resource type="Texture2D" uid="uid://c0bs4824ukh8u" path="res://hand.png" id="32_d2og2"]
+[ext_resource type="Texture2D" uid="uid://cy4unq3wrptvw" path="res://spritesheet.png" id="2_1niqm"]
 [ext_resource type="Texture2D" uid="uid://cb2jpens4mr0p" path="res://healthframe.png" id="76_tr0k7"]
 [ext_resource type="SpriteFrames" uid="uid://nrs6730yn8fw" path="res://healthbar_frames.tres" id="76_w6ef4"]
 [ext_resource type="Script" uid="uid://dulhvspkfoh" path="res://Characters/Player/camera_2d.gd" id="100_f2hkb"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_wraqo"]
-shader = ExtResource("3_wraqo")
-shader_parameter/silhouette = false
-shader_parameter/damage_flash = false
+[sub_resource type="Animation" id="Animation_6fff4"]
+resource_name = "idle"
+length = 0.4
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [4, 5, 6, 7]
+}
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_xqos4"]
-atlas = ExtResource("12_rgtww")
-region = Rect2(0, 0, 16, 24)
+[sub_resource type="Animation" id="Animation_6h4vt"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_xxflj"]
-atlas = ExtResource("12_rgtww")
-region = Rect2(16, 0, 16, 24)
+[sub_resource type="Animation" id="Animation_1niqm"]
+resource_name = "run"
+length = 0.4
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_pdn5s"]
-atlas = ExtResource("12_rgtww")
-region = Rect2(32, 0, 16, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_qy8ba"]
-atlas = ExtResource("12_rgtww")
-region = Rect2(48, 0, 16, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_fvyiu"]
-atlas = ExtResource("13_d2og2")
-region = Rect2(0, 0, 16, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_5qm8w"]
-atlas = ExtResource("13_d2og2")
-region = Rect2(16, 0, 16, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_k6jdo"]
-atlas = ExtResource("13_d2og2")
-region = Rect2(32, 0, 16, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_bx0yf"]
-atlas = ExtResource("13_d2og2")
-region = Rect2(48, 0, 16, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_2jhbk"]
-atlas = ExtResource("29_bx0yf")
-region = Rect2(0, 0, 16, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_327au"]
-atlas = ExtResource("29_bx0yf")
-region = Rect2(16, 0, 16, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_icnpe"]
-atlas = ExtResource("29_bx0yf")
-region = Rect2(32, 0, 16, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_p8656"]
-atlas = ExtResource("29_bx0yf")
-region = Rect2(48, 0, 16, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_82jp0"]
-atlas = ExtResource("30_14yy5")
-region = Rect2(0, 0, 16, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_mb2uo"]
-atlas = ExtResource("30_14yy5")
-region = Rect2(16, 0, 16, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ecm55"]
-atlas = ExtResource("30_14yy5")
-region = Rect2(32, 0, 16, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_cdst8"]
-atlas = ExtResource("30_14yy5")
-region = Rect2(48, 0, 16, 24)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_xhfnw"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_xqos4")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_xxflj")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_pdn5s")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_qy8ba")
-}],
-"loop": false,
-"name": &"death",
-"speed": 4.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_fvyiu")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_5qm8w")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_k6jdo")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_bx0yf")
-}],
-"loop": false,
-"name": &"hit",
-"speed": 8.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_2jhbk")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_327au")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_icnpe")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_p8656")
-}],
-"loop": true,
-"name": &"idle",
-"speed": 8.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_82jp0")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_mb2uo")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ecm55")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_cdst8")
-}],
-"loop": true,
-"name": &"run",
-"speed": 10.0
-}]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_wraqo"]
+_data = {
+&"RESET": SubResource("Animation_6h4vt"),
+&"idle": SubResource("Animation_6fff4"),
+&"run": SubResource("Animation_1niqm")
+}
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xgqey"]
 size = Vector2(9, 14)
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_d2og2"]
-radius = 2.0
 
 [node name="Player" type="CharacterBody2D" groups=["freezeable", "player"]]
 texture_filter = 1
 position = Vector2(350, 98)
 collision_layer = 2
 script = ExtResource("1_es1fo")
-slash_scene = ExtResource("3_c14pu")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-process_mode = 3
-texture_filter = 1
-material = SubResource("ShaderMaterial_wraqo")
-position = Vector2(0, -6)
-sprite_frames = SubResource("SpriteFrames_xhfnw")
-animation = &"hit"
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_1niqm")
+hframes = 8
+frame = 4
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D"]
+libraries = {
+&"": SubResource("AnimationLibrary_wraqo")
+}
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0.5, -2)
+position = Vector2(0, 2)
 shape = SubResource("RectangleShape2D_xgqey")
 
 [node name="SlashSpawn" type="Marker2D" parent="."]
@@ -189,6 +97,7 @@ position_smoothing_speed = 10.0
 script = ExtResource("100_f2hkb")
 
 [node name="HUD" type="CanvasLayer" parent="."]
+visible = false
 
 [node name="HealthBar" type="Control" parent="HUD"]
 layout_mode = 3
@@ -214,22 +123,3 @@ frame = 10
 frame_progress = 0.6696413
 centered = false
 offset = Vector2(20, 20)
-
-[node name="HandPivot" type="Node2D" parent="."]
-light_mask = 0
-texture_filter = 1
-script = ExtResource("30_rgtww")
-
-[node name="Hand" type="Node2D" parent="HandPivot"]
-script = ExtResource("31_d2og2")
-
-[node name="HandSprite" type="Sprite2D" parent="HandPivot/Hand"]
-position = Vector2(-13, 0)
-texture = ExtResource("32_d2og2")
-
-[node name="Hitbox" type="Area2D" parent="HandPivot/Hand"]
-position = Vector2(1, 1)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HandPivot/Hand/Hitbox"]
-position = Vector2(-15, -1)
-shape = SubResource("CircleShape2D_d2og2")
