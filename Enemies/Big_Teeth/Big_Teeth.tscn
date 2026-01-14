@@ -1,7 +1,7 @@
 [gd_scene load_steps=80 format=3 uid="uid://nxojlrbrypef"]
 
 [ext_resource type="Script" uid="uid://bnkmtp8pah72i" path="res://Enemies/Big_Teeth/Big_Teeth.gd" id="1_tjmy8"]
-[ext_resource type="Shader" uid="uid://cbxct24ys224x" path="res://flash_shader.gdshader" id="2_1spus"]
+[ext_resource type="Shader" uid="uid://cbxct24ys224x" path="res://Characters/flash_shader.gdshader" id="2_1spus"]
 [ext_resource type="Texture2D" uid="uid://bvwpd7g5nvpee" path="res://Enemies/Big_Teeth/death/death.png" id="4_1spus"]
 [ext_resource type="Texture2D" uid="uid://1ucrea2eeabj" path="res://Enemies/Big_Teeth/spawn/spawn.png" id="4_vjit0"]
 [ext_resource type="Texture2D" uid="uid://5woi234faabn" path="res://Enemies/Big_Teeth/walk/walk.png" id="5_dfdq8"]

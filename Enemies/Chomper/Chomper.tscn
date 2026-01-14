@@ -1,7 +1,7 @@
 [gd_scene load_steps=79 format=3 uid="uid://dnkooekb50pwf"]
 
 [ext_resource type="Script" uid="uid://bpxnjsvgxutqt" path="res://Enemies/Chomper/Chomper.gd" id="1_5pru2"]
-[ext_resource type="Shader" uid="uid://cbxct24ys224x" path="res://flash_shader.gdshader" id="2_60lsx"]
+[ext_resource type="Shader" uid="uid://cbxct24ys224x" path="res://Characters/flash_shader.gdshader" id="2_60lsx"]
 [ext_resource type="Texture2D" uid="uid://dcdydk0qpjhas" path="res://Enemies/Chomper/death/death.png" id="4_6xkvw"]
 [ext_resource type="Texture2D" uid="uid://cwuq5tq0t58ud" path="res://Enemies/Chomper/spawn/spawn.png" id="6_c2uoy"]
 [ext_resource type="Texture2D" uid="uid://b8klqhd1m6t8m" path="res://Enemies/Enemy HealthBar/sprite-1-26.png" id="7_mngnx"]

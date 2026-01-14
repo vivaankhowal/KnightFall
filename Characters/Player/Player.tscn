@@ -1,12 +1,20 @@
-[gd_scene load_steps=21 format=3 uid="uid://bv7mcbtqpuee"]
+[gd_scene load_steps=24 format=3 uid="uid://bv7mcbtqpuee"]
 
 [ext_resource type="Script" uid="uid://cfg1irk0mn7ga" path="res://Characters/Player/Player.gd" id="1_es1fo"]
 [ext_resource type="Texture2D" uid="uid://cy4unq3wrptvw" path="res://spritesheet.png" id="2_1niqm"]
-[ext_resource type="PackedScene" uid="uid://r2o77cwx1qr3" path="res://sword_slash.tscn" id="2_vpjpg"]
-[ext_resource type="Texture2D" uid="uid://d1qgd0db0psxf" path="res://sword.png" id="3_11ham"]
+[ext_resource type="PackedScene" uid="uid://0vh3dgnj1vrp" path="res://Characters/Player/DashAfterImage.tscn" id="2_14m2a"]
+[ext_resource type="PackedScene" uid="uid://r2o77cwx1qr3" path="res://Characters/Player/slash/sword_slash.tscn" id="2_vpjpg"]
+[ext_resource type="Texture2D" uid="uid://d1qgd0db0psxf" path="res://Characters/Player/slash/sword.png" id="3_11ham"]
+[ext_resource type="Shader" uid="uid://cs30hrd0ht4ag" path="res://Characters/Player/PlayerDashFlash.gdshader" id="4_dl42p"]
 [ext_resource type="Texture2D" uid="uid://cb2jpens4mr0p" path="res://healthframe.png" id="76_tr0k7"]
 [ext_resource type="SpriteFrames" uid="uid://nrs6730yn8fw" path="res://healthbar_frames.tres" id="76_w6ef4"]
 [ext_resource type="Script" uid="uid://dulhvspkfoh" path="res://Characters/Player/camera_2d.gd" id="100_f2hkb"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1niqm"]
+shader = ExtResource("4_dl42p")
+shader_parameter/flash_enabled = false
+shader_parameter/flash_color = Color(1, 1, 1, 1)
+shader_parameter/alpha_multiplier = 1.0
 
 [sub_resource type="Animation" id="Animation_6h4vt"]
 length = 0.001
@@ -222,9 +230,11 @@ texture_filter = 1
 position = Vector2(350, 98)
 collision_layer = 2
 script = ExtResource("1_es1fo")
+dash_afterimage_scene = ExtResource("2_14m2a")
 sword_slash_scene = ExtResource("2_vpjpg")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_1niqm")
 texture = ExtResource("2_1niqm")
 hframes = 8
 frame = 4

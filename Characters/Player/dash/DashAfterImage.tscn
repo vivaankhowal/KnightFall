@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://0vh3dgnj1vrp"]
+
+[ext_resource type="Script" uid="uid://btv5lxg2dhk57" path="res://Characters/DashAfterImage.gd" id="1_hnvtn"]
+[ext_resource type="Texture2D" uid="uid://cy4unq3wrptvw" path="res://spritesheet.png" id="2_me3yq"]
+
+[node name="DashAfterImage" type="Node2D"]
+script = ExtResource("1_hnvtn")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(18.892157, 18.892157, 18.892157, 1)
+self_modulate = Color(18.892157, 18.892157, 18.892157, 1)
+z_index = -1
+texture_filter = 1
+texture = ExtResource("2_me3yq")
+hframes = 8
