@@ -484,17 +484,17 @@ position = Vector2(2645, 688)
 
 [node name="DamageOverlay" parent="." instance=ExtResource("13_2w4de")]
 
+[node name="BigTeeth4" parent="." instance=ExtResource("13_otngv")]
+position = Vector2(3407, 1252)
+
+[node name="BigTeeth3" parent="." instance=ExtResource("13_otngv")]
+position = Vector2(2953, 1373)
+
+[node name="BigTeeth2" parent="." instance=ExtResource("13_otngv")]
+position = Vector2(2943, 1058)
+
 [node name="BigTeeth" parent="." instance=ExtResource("13_otngv")]
 position = Vector2(2572, 1240)
-
-[node name="BigTeeth" parent="BigTeeth" instance=ExtResource("13_otngv")]
-position = Vector2(371, -182)
-
-[node name="BigTeeth" parent="BigTeeth/BigTeeth" instance=ExtResource("13_otngv")]
-position = Vector2(10, 315)
-
-[node name="BigTeeth" parent="BigTeeth/BigTeeth/BigTeeth" instance=ExtResource("13_otngv")]
-position = Vector2(454, -121)
 
 [node name="Chomper" parent="." instance=ExtResource("5_6p0p1")]
 position = Vector2(2502, 1124)

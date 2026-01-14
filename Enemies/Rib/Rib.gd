@@ -41,6 +41,8 @@ var sliding_on_death: bool = false
 
 # Hit spark alternator
 var hitspark_toggle: bool = false
+var is_swinging := false
+
 
 # ======================================================
 # ===================== NODE REFERENCES ===============

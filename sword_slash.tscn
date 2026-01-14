@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://r2o77cwx1qr3"]
+
+[ext_resource type="Script" uid="uid://cb2oh3fbjib73" path="res://sword_slash.gd" id="1_cl6ki"]
+[ext_resource type="Texture2D" uid="uid://d0tjsxuxkmwpe" path="res://Characters/Player/slash/slash.png" id="2_cl6ki"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cl6ki"]
+size = Vector2(426, 180)
+
+[node name="SwordSlash" type="Area2D"]
+scale = Vector2(0.1, 0.1)
+collision_layer = 8
+collision_mask = 4
+script = ExtResource("1_cl6ki")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(1, 2)
+texture = ExtResource("2_cl6ki")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0.9999997, 7.152556e-06)
+scale = Vector2(0.9999998, 0.9999998)
+shape = SubResource("RectangleShape2D_cl6ki")
