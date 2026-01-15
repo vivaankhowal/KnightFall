@@ -1,6 +1,7 @@
 extends Node2D
 
-@export var maxRoomCount = 15
+@export var maxRoomCount = 20
+@export var minRoomCount = 10
 
 @onready var rooms: Node2D = $rooms
 
@@ -10,7 +11,7 @@ func _ready() -> void:
 	_create_dungeon()
 	
 func _create_dungeon():
-	var roomCount := randi_range(10, maxRoomCount)
+	var roomCount := randi_range(minRoomCount, maxRoomCount)
 
 	for room in roomCount: 
 		await _create_room()

@@ -18,11 +18,6 @@ extends Area2D
 @onready var wall_layer: TileMapLayer = $WallLayer
 @onready var collision_polygon_2d: CollisionPolygon2D = $CollisionPolygon2D
 
-@export var wall_source_id := 5
-@export var floor_source_id := 6
-@export var floor_atlas := Vector2i(0, 0) # set in inspector
-
-
 var directions = {
 	"right": Vector2i(1,0),
 	"bottom": Vector2i(0,1),
@@ -30,27 +25,25 @@ var directions = {
 	"top": Vector2i(0,-1),
 }
 var floorTiles = {
-	"default": Vector2i(1, 2),
+	"default": Vector2(1,2),
 }
-
 var wallTiles = {
-	"left": Vector2i(2, 5),
-	"right": Vector2i(0, 5),
-	"bottom": Vector2i(1, 4),
-	"topLeftCorner": Vector2i(0, 7),
-	"topRightCorner": Vector2i(1, 7),
-	"bottomLeftCorner": Vector2i(0, 8),
-	"bottomRightCorner": Vector2i(1, 8),
-	"top": Vector2i(1, 15),
-	"top2": Vector2i(1, 14),
-	"top3": Vector2i(1, 13),
-	"top4": Vector2i(1, 6),
-	"topLeftCornerReverse": Vector2i(2, 6),
-	"topRightCornerReverse": Vector2i(0, 6),
-	"bottomLeftCornerReverse": Vector2i(2, 4),
-	"bottomRightCornerReverse": Vector2i(0, 4),
+	"left": Vector2(2,5),
+	"right": Vector2(0,5),
+	"bottom": Vector2(1,4),
+	"topLeftCorner": Vector2(0,7),
+	"topRightCorner": Vector2(1,7),
+	"bottomLeftCorner": Vector2(0,8),
+	"bottomRightCorner": Vector2(1,8),
+	"top": Vector2(1,15),
+	"top2": Vector2(1,14),
+	"top3": Vector2(1,13),
+	"top4": Vector2(1,6),
+	"topLeftCornerReverse": Vector2(2,6),
+	"topRightCornerReverse": Vector2(0,6),
+	"bottomLeftCornerReverse": Vector2(2,4),
+	"bottomRightCornerReverse": Vector2(0,4),
 }
-
 
 func _ready() -> void:
 	floor_layer.clear()
