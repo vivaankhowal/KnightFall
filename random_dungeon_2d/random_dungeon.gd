@@ -8,14 +8,16 @@ extends Node2D
 const RANDOM_ROOM = preload("res://random_dungeon_2d/randomRoom.tscn")
 
 func _ready() -> void:
+	hide()
 	_create_dungeon()
 	
 func _create_dungeon():
 	var roomCount := randi_range(minRoomCount, maxRoomCount)
-
 	for room in roomCount: 
 		await _create_room()
 		
+	show()
+
 func _create_room():
 	var existingRooms = rooms.get_children()
 	

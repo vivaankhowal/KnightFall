@@ -369,3 +369,11 @@ func _update_flash_shader() -> void:
 func update_health_bar() -> void:
 	var percent := float(current_health) / float(max_health)
 	health_bar.frame = clamp(int(round(percent * 10.0)), 0, 10)
+
+func disable():
+	set_physics_process(false)
+	visible = false
+
+func enable():
+	set_physics_process(true)
+	visible = true

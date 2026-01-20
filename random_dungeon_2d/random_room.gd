@@ -401,5 +401,3 @@ func _has_wall(lookPosition):
 
 	
 	
-	
-	

@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://bwes1qixdiu6"]
+
+[ext_resource type="PackedScene" uid="uid://c5a3qkc4rk8jp" path="res://random_dungeon_2d/random_dungeon.tscn" id="1_kyxg0"]
+
+[node name="Level1" type="Node2D"]
+
+[node name="ColorRect" type="ColorRect" parent="."]
+z_index = -100
+offset_left = -2637.0
+offset_top = -1853.0
+offset_right = 3866.0
+offset_bottom = 2394.0
+color = Color(0.14044744, 0.14044744, 0.14044744, 1)
+
+[node name="RandomDungeon" parent="." instance=ExtResource("1_kyxg0")]
+position = Vector2(800, 240)
+
+[node name="SpawnPoint" type="Marker2D" parent="."]
