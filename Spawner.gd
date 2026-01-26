@@ -1,7 +1,7 @@
 extends Node2D
 
-@export var enemy_scene: PackedScene
-@export var enemies_per_wave := [2, 3, 4, 5, 6, 7, 8]
+@export var enemy_pool: Array[PackedScene]
+@export var enemies_per_wave := [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 @onready var enemies_node := get_parent().get_node("Enemies")
 @onready var arena := get_parent().get_node("ArenaTileMap")
@@ -23,10 +23,17 @@ func start_wave():
 		spawn_enemy()
 
 func spawn_enemy():
+	if enemy_pool.is_empty():
+		return
+
+	var enemy_scene = enemy_pool.pick_random()
 	var enemy = enemy_scene.instantiate()
+
 	enemy.global_position = get_spawn_position()
 	enemies_node.add_child(enemy)
+
 	enemy.tree_exited.connect(on_enemy_died)
+
 
 func on_enemy_died():
 	alive -= 1

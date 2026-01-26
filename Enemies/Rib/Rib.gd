@@ -155,25 +155,6 @@ func _on_cooldown_timeout():
 	can_attack = true
 
 # ======================================================
-# ======================== HITSPARK =====================
-# ======================================================
-
-func _play_hitspark():
-	hitspark.visible = true
-
-	# alternate between hit1 and hit2
-	if hitspark_toggle:
-		hitspark.play("hit1")
-	else:
-		hitspark.play("hit2")
-
-	hitspark_toggle = !hitspark_toggle
-
-	hitspark.animation_finished.connect(func():
-		hitspark.visible = false
-	, CONNECT_ONE_SHOT)
-
-# ======================================================
 # ==================== DAMAGE & HIT ====================
 # ======================================================
 
@@ -183,9 +164,6 @@ func take_damage(amount: int, from: Vector2 = Vector2.ZERO):
 
 	current_health -= amount
 	update_health_bar()
-
-	# HITSPARK
-	_play_hitspark()
 
 	# Normal slide knockback
 	var dir = (global_position - from).normalized()
@@ -238,9 +216,6 @@ func die(from: Vector2):
 	if anim.sprite_frames.has_animation("death"):
 		anim.play("death")
 
-	# Death hitspark (hit3)
-	_play_death_hitspark()
-
 	# Strong backward slide
 	var slide_dir = (global_position - from).normalized()
 	death_knockback_velocity = slide_dir * death_slide_force
@@ -259,13 +234,6 @@ func _on_anim_finished():
 	if is_dead:
 		queue_free()
 
-func _play_death_hitspark():
-	hitspark.visible = true
-	hitspark.play("hit3")
-
-	hitspark.animation_finished.connect(func():
-		hitspark.visible = false
-	, CONNECT_ONE_SHOT)
 
 func get_separation_vector() -> Vector2:
 	var push = Vector2.ZERO

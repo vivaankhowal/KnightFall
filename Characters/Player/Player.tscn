@@ -1,8 +1,7 @@
-[gd_scene load_steps=24 format=3 uid="uid://bv7mcbtqpuee"]
+[gd_scene load_steps=23 format=3 uid="uid://bv7mcbtqpuee"]
 
 [ext_resource type="Script" uid="uid://cfg1irk0mn7ga" path="res://Characters/Player/Player.gd" id="1_es1fo"]
 [ext_resource type="Texture2D" uid="uid://cy4unq3wrptvw" path="res://spritesheet.png" id="2_1niqm"]
-[ext_resource type="PackedScene" uid="uid://0vh3dgnj1vrp" path="res://Characters/Player/dash/DashAfterImage.tscn" id="2_14m2a"]
 [ext_resource type="PackedScene" uid="uid://r2o77cwx1qr3" path="res://Characters/Player/slash/sword_slash.tscn" id="2_vpjpg"]
 [ext_resource type="Texture2D" uid="uid://d1qgd0db0psxf" path="res://Characters/Player/slash/sword.png" id="3_11ham"]
 [ext_resource type="Shader" uid="uid://cs30hrd0ht4ag" path="res://Characters/Player/dash/PlayerDashFlash.gdshader" id="4_dl42p"]
@@ -230,7 +229,8 @@ texture_filter = 1
 position = Vector2(350, 98)
 collision_layer = 2
 script = ExtResource("1_es1fo")
-dash_afterimage_scene = ExtResource("2_14m2a")
+dash_speed = 700.0
+dash_distance = 70.0
 sword_slash_scene = ExtResource("2_vpjpg")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
