@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=3 uid="uid://doe1inkrft5lv"]
+
+[ext_resource type="Script" uid="uid://b6cijokfudw6e" path="res://ShooterEnemy.gd" id="1_pu8uq"]
+[ext_resource type="PackedScene" uid="uid://cjhxwwb5eolti" path="res://Enemies/Enemy Projectiles/Design 1/EnemyProjectile.tscn" id="2_o8ra1"]
+[ext_resource type="Texture2D" uid="uid://4fsjujpebb62" path="res://KnightFall Assets/Entities/frames/big_zombie_idle_anim_f0.png" id="3_8v7ne"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8v7ne"]
+size = Vector2(24, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3f4oa"]
+size = Vector2(17, 25)
+
+[node name="ShooterEnemy" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 11
+script = ExtResource("1_pu8uq")
+projectile_scene = ExtResource("2_o8ra1")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("3_8v7ne")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 5)
+shape = SubResource("RectangleShape2D_8v7ne")
+
+[node name="ShootTimer" type="Timer" parent="."]
+
+[node name="AttackArea" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
+position = Vector2(0, 5)
+shape = SubResource("RectangleShape2D_3f4oa")
+
+[connection signal="area_entered" from="AttackArea" to="." method="_on_attack_area_area_entered"]

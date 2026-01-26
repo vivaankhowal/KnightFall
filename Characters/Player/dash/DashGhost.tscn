@@ -1,8 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://cygicneinbjkt"]
-
-[ext_resource type="Script" uid="uid://bt6gghu45cffl" path="res://Characters/Player/dash/dash_ghost.gd" id="1_ocj84"]
-
-[node name="DashGhost" type="Node2D"]
-script = ExtResource("1_ocj84")
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]

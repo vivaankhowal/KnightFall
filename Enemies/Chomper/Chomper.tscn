@@ -5,10 +5,10 @@
 [ext_resource type="Texture2D" uid="uid://dcdydk0qpjhas" path="res://Enemies/Chomper/death/death.png" id="4_6xkvw"]
 [ext_resource type="Texture2D" uid="uid://b8klqhd1m6t8m" path="res://Enemies/Enemy HealthBar/sprite-1-26.png" id="7_mngnx"]
 [ext_resource type="Texture2D" uid="uid://devtmiw62na0g" path="res://Enemies/Enemy HealthBar/sprite-1-20.png" id="8_kdh1f"]
-[ext_resource type="Texture2D" uid="uid://d3iq2htbfv37o" path="res://Enemies/Chomper/hitspark/hit1.png" id="9_682xd"]
+[ext_resource type="Texture2D" uid="uid://b5bh8fjpmpwxr" path="res://Enemies/Enemy Hitspark/hit1.png" id="9_682xd"]
 [ext_resource type="Texture2D" uid="uid://c866yjxbwfy12" path="res://Enemies/Chomper/walk/walk.png" id="9_g838r"]
-[ext_resource type="Texture2D" uid="uid://bair8w53d8dud" path="res://Enemies/Chomper/hitspark/hit2.png" id="10_8ljq6"]
-[ext_resource type="Texture2D" uid="uid://6b6qyo54k25q" path="res://Enemies/Chomper/hitspark/hit3.png" id="11_m1kb5"]
+[ext_resource type="Texture2D" uid="uid://ct1ujvt2pj60b" path="res://Enemies/Enemy Hitspark/hit2.png" id="10_8ljq6"]
+[ext_resource type="Texture2D" uid="uid://b3r8dhdwp0ykv" path="res://Enemies/Enemy Hitspark/hit3.png" id="11_m1kb5"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_6do27"]
 shader = ExtResource("2_60lsx")
@@ -322,6 +322,7 @@ size = Vector2(15.5, 23)
 
 [node name="Chomper" type="CharacterBody2D" groups=["enemy"]]
 collision_layer = 4
+collision_mask = 11
 script = ExtResource("1_5pru2")
 
 [node name="SpriteRoot" type="Node2D" parent="."]
@@ -358,7 +359,7 @@ stretch_margin_top = 3
 texture_under = ExtResource("7_mngnx")
 texture_progress = ExtResource("8_kdh1f")
 
-[node name="AttackArea" type="Area2D" parent="."]
+[node name="AttackArea" type="Area2D" parent="." groups=["enemy"]]
 collision_layer = 8
 collision_mask = 2
 

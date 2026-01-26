@@ -4,9 +4,9 @@
 [ext_resource type="Shader" uid="uid://cbxct24ys224x" path="res://Characters/flash_shader.gdshader" id="2_lppwi"]
 [ext_resource type="Texture2D" uid="uid://d2e3ho4y1y1w5" path="res://Enemies/Rib/death/death.png" id="3_301pg"]
 [ext_resource type="Texture2D" uid="uid://cr1yxhmvcr3v" path="res://Enemies/Rib/walk/walk.png" id="6_03026"]
-[ext_resource type="Texture2D" uid="uid://dmdvuhejlimep" path="res://Enemies/Rib/hit1.png" id="6_narsg"]
-[ext_resource type="Texture2D" uid="uid://c4wiip0xl5ih6" path="res://Enemies/Rib/hit2.png" id="7_l670g"]
-[ext_resource type="Texture2D" uid="uid://b123docw0w8if" path="res://Enemies/Rib/hit3.png" id="8_00a7d"]
+[ext_resource type="Texture2D" uid="uid://b5bh8fjpmpwxr" path="res://Enemies/Enemy Hitspark/hit1.png" id="6_narsg"]
+[ext_resource type="Texture2D" uid="uid://ct1ujvt2pj60b" path="res://Enemies/Enemy Hitspark/hit2.png" id="7_l670g"]
+[ext_resource type="Texture2D" uid="uid://b3r8dhdwp0ykv" path="res://Enemies/Enemy Hitspark/hit3.png" id="8_00a7d"]
 [ext_resource type="Texture2D" uid="uid://b8klqhd1m6t8m" path="res://Enemies/Enemy HealthBar/sprite-1-26.png" id="10_0xm33"]
 [ext_resource type="Texture2D" uid="uid://devtmiw62na0g" path="res://Enemies/Enemy HealthBar/sprite-1-20.png" id="11_esruw"]
 
@@ -319,6 +319,7 @@ size = Vector2(18, 23.25)
 
 [node name="Rib" type="CharacterBody2D" groups=["enemy"]]
 collision_layer = 4
+collision_mask = 11
 script = ExtResource("1_hw5h5")
 
 [node name="SpriteRoot" type="Node2D" parent="."]

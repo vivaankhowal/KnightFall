@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://cfcu1e27pocda"]
+
+[ext_resource type="Script" path="res://ShooterEnemy.gd" id="1_pu8uq"]
+[ext_resource type="PackedScene" uid="uid://cjhxwwb5eolti" path="res://Enemies/Enemy Projectiles/Design 1/EnemyProjectile.tscn" id="2_o8ra1"]
+[ext_resource type="Texture2D" uid="uid://4fsjujpebb62" path="res://KnightFall Assets/Entities/frames/big_zombie_idle_anim_f0.png" id="3_8v7ne"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8v7ne"]
+size = Vector2(32, 43)
+
+[node name="ShooterEnemy" type="CharacterBody2D"]
+script = ExtResource("1_pu8uq")
+projectile_scene = ExtResource("2_o8ra1")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(2, 2)
+texture = ExtResource("3_8v7ne")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 10.5)
+shape = SubResource("RectangleShape2D_8v7ne")
+
+[node name="ShootTimer" type="Timer" parent="."]

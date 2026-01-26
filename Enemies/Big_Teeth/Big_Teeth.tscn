@@ -1,14 +1,11 @@
-[gd_scene load_steps=58 format=3 uid="uid://nxojlrbrypef"]
+[gd_scene load_steps=55 format=3 uid="uid://nxojlrbrypef"]
 
 [ext_resource type="Script" uid="uid://bnkmtp8pah72i" path="res://Enemies/Big_Teeth/Big_Teeth.gd" id="1_tjmy8"]
 [ext_resource type="Shader" uid="uid://cbxct24ys224x" path="res://Characters/flash_shader.gdshader" id="2_1spus"]
 [ext_resource type="Texture2D" uid="uid://bvwpd7g5nvpee" path="res://Enemies/Big_Teeth/death/death.png" id="4_1spus"]
 [ext_resource type="Texture2D" uid="uid://5woi234faabn" path="res://Enemies/Big_Teeth/walk/walk.png" id="5_dfdq8"]
 [ext_resource type="Texture2D" uid="uid://b8klqhd1m6t8m" path="res://Enemies/Enemy HealthBar/sprite-1-26.png" id="6_iucq2"]
-[ext_resource type="Texture2D" uid="uid://pskoi8fw5k7y" path="res://Enemies/Big_Teeth/hitspark/hit1.png" id="6_raf0o"]
 [ext_resource type="Texture2D" uid="uid://devtmiw62na0g" path="res://Enemies/Enemy HealthBar/sprite-1-20.png" id="7_4gjs3"]
-[ext_resource type="Texture2D" uid="uid://0omgad1bnvd6" path="res://Enemies/Big_Teeth/hitspark/hit2.png" id="7_t2ixy"]
-[ext_resource type="Texture2D" uid="uid://dgx867bma6hy5" path="res://Enemies/Big_Teeth/hitspark/hit3.png" id="8_gl2lo"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_6do27"]
 shader = ExtResource("2_1spus")
@@ -182,87 +179,66 @@ animations = [{
 }]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_c6dda"]
-atlas = ExtResource("6_raf0o")
 region = Rect2(0, 0, 52, 57)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_p4523"]
-atlas = ExtResource("6_raf0o")
 region = Rect2(52, 0, 52, 57)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g6rsx"]
-atlas = ExtResource("6_raf0o")
 region = Rect2(104, 0, 52, 57)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_sbc8b"]
-atlas = ExtResource("6_raf0o")
 region = Rect2(156, 0, 52, 57)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_aa27l"]
-atlas = ExtResource("6_raf0o")
 region = Rect2(208, 0, 52, 57)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3o7ir"]
-atlas = ExtResource("6_raf0o")
 region = Rect2(260, 0, 52, 57)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_q438c"]
-atlas = ExtResource("6_raf0o")
 region = Rect2(312, 0, 52, 57)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_o4r8c"]
-atlas = ExtResource("7_t2ixy")
 region = Rect2(0, 0, 52, 57)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ukorp"]
-atlas = ExtResource("7_t2ixy")
 region = Rect2(52, 0, 52, 57)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_80p1a"]
-atlas = ExtResource("7_t2ixy")
 region = Rect2(104, 0, 52, 57)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_obiyn"]
-atlas = ExtResource("7_t2ixy")
 region = Rect2(156, 0, 52, 57)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_05uhh"]
-atlas = ExtResource("7_t2ixy")
 region = Rect2(208, 0, 52, 57)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_y84tm"]
-atlas = ExtResource("7_t2ixy")
 region = Rect2(260, 0, 52, 57)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_yd2kq"]
-atlas = ExtResource("7_t2ixy")
 region = Rect2(312, 0, 52, 57)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jaa36"]
-atlas = ExtResource("8_gl2lo")
 region = Rect2(0, 0, 52, 57)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_f2it4"]
-atlas = ExtResource("8_gl2lo")
 region = Rect2(52, 0, 52, 57)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_myhmb"]
-atlas = ExtResource("8_gl2lo")
 region = Rect2(104, 0, 52, 57)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_du5vu"]
-atlas = ExtResource("8_gl2lo")
 region = Rect2(156, 0, 52, 57)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gbb8i"]
-atlas = ExtResource("8_gl2lo")
 region = Rect2(208, 0, 52, 57)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_power"]
-atlas = ExtResource("8_gl2lo")
 region = Rect2(260, 0, 52, 57)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_e232f"]
-atlas = ExtResource("8_gl2lo")
 region = Rect2(312, 0, 52, 57)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_42bbb"]
@@ -354,6 +330,7 @@ size = Vector2(29, 35)
 
 [node name="BigTeeth" type="CharacterBody2D" groups=["enemy"]]
 collision_layer = 4
+collision_mask = 11
 script = ExtResource("1_tjmy8")
 
 [node name="SpriteRoot" type="Node2D" parent="."]
@@ -361,7 +338,6 @@ script = ExtResource("1_tjmy8")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="SpriteRoot"]
 texture_filter = 1
 material = SubResource("ShaderMaterial_6do27")
-position = Vector2(0, 0.44444445)
 sprite_frames = SubResource("SpriteFrames_j4qr3")
 animation = &"death"
 
@@ -391,7 +367,7 @@ stretch_margin_top = 3
 texture_under = ExtResource("6_iucq2")
 texture_progress = ExtResource("7_4gjs3")
 
-[node name="AttackArea" type="Area2D" parent="."]
+[node name="AttackArea" type="Area2D" parent="." groups=["enemy"]]
 collision_layer = 8
 collision_mask = 2
 
