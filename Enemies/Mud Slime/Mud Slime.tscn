@@ -1,0 +1,97 @@
+[gd_scene load_steps=14 format=3 uid="uid://dnkooekb50pwf"]
+
+[ext_resource type="Script" uid="uid://bok8wo5syb0w4" path="res://Enemies/Mud Slime/Mud Slime.gd" id="1_wtxbr"]
+[ext_resource type="Shader" uid="uid://cbxct24ys224x" path="res://Characters/flash_shader.gdshader" id="2_60lsx"]
+[ext_resource type="Texture2D" uid="uid://bmgblqcb3mn2d" path="res://Enemies/Mud Slime/walk.png" id="3_wtxbr"]
+[ext_resource type="Texture2D" uid="uid://b8klqhd1m6t8m" path="res://Enemies/Enemy HealthBar/sprite-1-26.png" id="7_mngnx"]
+[ext_resource type="Texture2D" uid="uid://devtmiw62na0g" path="res://Enemies/Enemy HealthBar/sprite-1-20.png" id="8_kdh1f"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6do27"]
+shader = ExtResource("2_60lsx")
+shader_parameter/flash_strength = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qixya"]
+atlas = ExtResource("3_wtxbr")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xfmr1"]
+atlas = ExtResource("3_wtxbr")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lgslr"]
+atlas = ExtResource("3_wtxbr")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g8rye"]
+atlas = ExtResource("3_wtxbr")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_j4qr3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qixya")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xfmr1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lgslr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g8rye")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 9.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_s7bn3"]
+size = Vector2(11.25, 13)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2hac7"]
+size = Vector2(18, 17)
+
+[node name="Mud Slime" type="CharacterBody2D" groups=["enemy"]]
+collision_layer = 4
+collision_mask = 15
+script = ExtResource("1_wtxbr")
+move_speed = 40.0
+
+[node name="SpriteRoot" type="Node2D" parent="."]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="SpriteRoot"]
+texture_filter = 1
+material = SubResource("ShaderMaterial_6do27")
+sprite_frames = SubResource("SpriteFrames_j4qr3")
+animation = &"walk"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.125, 1.5)
+shape = SubResource("RectangleShape2D_s7bn3")
+
+[node name="HealthBar" type="Node2D" parent="."]
+
+[node name="TextureBar" type="TextureProgressBar" parent="HealthBar"]
+texture_filter = 1
+offset_left = -20.0
+offset_top = 11.0
+offset_right = 20.0
+offset_bottom = 16.0
+max_value = 30.0
+nine_patch_stretch = true
+stretch_margin_left = 4
+stretch_margin_top = 3
+texture_under = ExtResource("7_mngnx")
+texture_progress = ExtResource("8_kdh1f")
+
+[node name="AttackArea" type="Area2D" parent="." groups=["enemy"]]
+collision_layer = 8
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
+position = Vector2(0, 1.5)
+shape = SubResource("RectangleShape2D_2hac7")
+
+[connection signal="body_entered" from="AttackArea" to="." method="_on_attack_area_body_entered"]
+[connection signal="body_exited" from="AttackArea" to="." method="_on_attack_area_body_exited"]

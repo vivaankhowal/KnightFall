@@ -42,3 +42,6 @@ func _on_body_entered(body: Node):
 	remaining_pierces -= 1
 	if remaining_pierces < 0:
 		queue_free()
+
+func get_damage() -> int:
+	return damage
