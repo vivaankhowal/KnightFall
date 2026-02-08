@@ -5,12 +5,9 @@ extends Node2D
 # ======================================================
 
 @export var enemy_pool: Array[PackedScene]
-
-# Must match enemy_pool order
-# Higher number = more common
-@export var enemy_weights: Array[int] = []
-
+@export var enemy_weights: Array[int] = []  # MUST match enemy_pool order
 @export var enemies_per_wave := [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
 @export var min_spawn_distance := 4  # tiles from player
 
 @onready var enemies_node := get_parent().get_node("Enemies")
@@ -25,16 +22,13 @@ var current_wave := 0
 var alive := 0
 var finished := false
 
-var spawn_queue: Array[PackedScene] = []
-
 # ======================================================
 # ==================== READY ===========================
 # ======================================================
 
 func _ready():
-	assert(enemy_pool.size() == enemy_weights.size(),
-		"enemy_pool and enemy_weights must be the same size")
-
+	randomize()
+	_validate_weights()
 	start_wave()
 
 # ======================================================
@@ -43,41 +37,19 @@ func _ready():
 
 func start_wave():
 	finished = false
-	spawn_queue.clear()
 
-	var total_to_spawn = enemies_per_wave[current_wave]
+	var total_to_spawn: int = enemies_per_wave[current_wave]
+	alive = total_to_spawn
 
-	# --------------------------------------------------
-	# Phase 1: GUARANTEE each enemy spawns once
-	# --------------------------------------------------
-	var guaranteed = enemy_pool.duplicate()
-	guaranteed.shuffle()
+	for i in total_to_spawn:
+		var scene := _pick_weighted_enemy()
+		if scene:
+			_spawn_enemy(scene)
 
-	for scene in guaranteed:
-		if spawn_queue.size() < total_to_spawn:
-			spawn_queue.append(scene)
-
-	# --------------------------------------------------
-	# Phase 2: WEIGHTED RANDOM spawns
-	# --------------------------------------------------
-	while spawn_queue.size() < total_to_spawn:
-		spawn_queue.append(pick_weighted_enemy())
-
-	spawn_queue.shuffle()
-	alive = spawn_queue.size()
-
-	for scene in spawn_queue:
-		spawn_enemy(scene)
-
-# ======================================================
-# ==================== SPAWNING ========================
-# ======================================================
-
-func spawn_enemy(enemy_scene: PackedScene):
+func _spawn_enemy(enemy_scene: PackedScene):
 	var enemy = enemy_scene.instantiate()
 	enemy.global_position = get_spawn_position()
 	enemies_node.add_child(enemy)
-
 	enemy.tree_exited.connect(on_enemy_died)
 
 func on_enemy_died():
@@ -94,42 +66,88 @@ func end_wave():
 		start_wave()
 	else:
 		print("ALL WAVES COMPLETE")
-		# later: boss / exit / level complete
 
 # ======================================================
-# ==================== RANDOM ==========================
+# =================== WEIGHTED PICK ====================
 # ======================================================
 
-func pick_weighted_enemy() -> PackedScene:
+func _pick_weighted_enemy() -> PackedScene:
 	var total := 0
 	for w in enemy_weights:
-		total += w
+		if w > 0:
+			total += w
 
-	var roll = randi_range(1, total)
+	if total <= 0:
+		return null
+
+	var roll := randi_range(1, total)
 	var acc := 0
 
 	for i in enemy_pool.size():
+		if enemy_weights[i] <= 0:
+			continue
+
 		acc += enemy_weights[i]
 		if roll <= acc:
 			return enemy_pool[i]
 
-	# Safety fallback
-	return enemy_pool.pick_random()
+	return null
 
 # ======================================================
-# ==================== SPAWN POS =======================
+# ================= VALIDATION + DEBUG =================
+# ======================================================
+
+func _validate_weights() -> void:
+	if enemy_pool.is_empty():
+		push_warning("enemy_pool is empty")
+		return
+
+	if enemy_weights.size() != enemy_pool.size():
+		push_warning("enemy_weights size != enemy_pool size. Resizing and defaulting to 1.")
+		enemy_weights.resize(enemy_pool.size())
+
+	# IMPORTANT:
+	# 0 = disabled
+	# 1+ = enabled
+	for i in enemy_weights.size():
+		if enemy_weights[i] < 0:
+			enemy_weights[i] = 0
+
+	_print_weight_debug()
+
+func _print_weight_debug() -> void:
+	var total := 0
+	for w in enemy_weights:
+		if w > 0:
+			total += w
+
+	print("--- Enemy Pool + Weights ---")
+	for i in enemy_pool.size():
+		var scene := enemy_pool[i]
+		var name := scene.resource_path.get_file()
+		var w := enemy_weights[i]
+
+		if w > 0 and total > 0:
+			var pct := (float(w) / float(total)) * 100.0
+			print(i, ": ", name, "  weight=", w, " (~", snapped(pct, 0.1), "%)")
+		else:
+			print(i, ": ", name, "  DISABLED")
+	print("----------------------------")
+
+# ======================================================
+# =================== SPAWN POSITION ===================
 # ======================================================
 
 func get_spawn_position() -> Vector2:
 	var inner_r = arena.reveal_radius - 2
 	var player_pos = player.global_position
 
-	for _i in 15:
+	for _attempt in 15:
 		var x = randi_range(-inner_r, inner_r)
 		var y = randi_range(-inner_r, inner_r)
 		var cell = Vector2i(x, y)
 
-		# Must be valid floor tile
+		# Must have floor tile
 		if arena.get_cell_source_id(0, cell) == -1:
 			continue
 
@@ -141,5 +159,4 @@ func get_spawn_position() -> Vector2:
 
 		return world_pos
 
-	# Fallback (corner of arena)
 	return arena.map_to_local(Vector2i(inner_r, inner_r))
